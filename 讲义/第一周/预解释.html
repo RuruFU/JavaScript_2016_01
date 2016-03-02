@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+</body>
+<script>
+
+    //预解释：在js中，会对带var/function关键字的，在代码运行之前，提前申声明/定义
+    //对带var关键字的是提前声明（declare）
+    //带functtion关键字会提前定义（声明+赋值）(defined)
+var sum ="珠峰"
+//
+
+
+
+
+  function fn(){
+      console.log("方法fn")
+  }
+
+    //方法运行之前先形参赋值---->方法预解释
+
+
+
+    //方法定义的步骤
+    //首先开辟一个内存空间
+    //
+
+//预解释重名变量
+    console.log(n);  //预解释时遇到重复的变量会忽视----->undefined
+    var n=9;
+    var n;
+    var n=3;
+
+
+
+  //作用域链
+    //作用域：全局和私有作用域
+   // 在全局作用域下声明的变量就称为全局变量
+    //方法运行的时候，会开辟一个私有的空间。称为私有作用域，别名“闭包”，里面的变量就称为私有变量
+
+    var sum="a";---> window.sum="a"
+   //作用域链：代码执行的时候能够保证
+
+
+
+   // 不进行预解释
+    //1，方法作为只存在的
+    f();//在定义之前执行，报错
+    var f=function(){console.log(1)};  //函数表达式
+
+  //自执行函数是声明+赋值+执行一起
+~(function(){
+    console.log("自动执行")
+})()
+
+ function fn(){
+     console.log(sum)
+     return function sum(){};//
+ }
+   //2,不管条件是否成立，都进行预解释
+    if(!("a" in window)){   //a是否是window的属性
+       var a="珠峰";
+    }
+    console.log(a); -->undefined     //只要定义在全局下的变量，全是window的属性
+
+
+
+
+   //闭包是方法运行的一种机制，可以保护变量或方法不受污染
+
+
+
+
+
+
+
+
+
+
+</script>
+</html>
