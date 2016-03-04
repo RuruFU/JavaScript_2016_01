@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            height: 100%;
+        }
+        div{
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+<div></div>
+</body>
+</html>
+
+<script>
+
+//    function getRanddomColor(){
+//        var winW=document.documentElement.clientWidth||document.body.clientWidth;
+//        var  winH=document.documentElement.clientHeight||document.body.clientHeight;
+//
+//        var of=document.createDocumentFragment();//文档碎片（相当于仓库）
+//
+//        var boxW=winW/10;//每个方块的宽度
+//        var boxH=winH/10;//每个方块的高度
+//        for(var  i=0;i<10;i++){   //行
+//            for(var j=0;j<10;j++){    //列
+//                var oDiv=document.createElement("div");
+//                oDiv.style.width=boxW+"px";
+//                oDiv.style.height=boxH+"px";
+//                //安排每个方块的位置
+//                oDiv.style.position="absolute";
+//                oDiv.style.left=i*boxW+"px";
+//                oDiv.style.top=j*boxH+"px";
+//                //随机获取r，g，b，值（0-255之间的整数）
+//                var r=Math.floor(Math.random()*255);
+//                var g=Math.floor(Math.random()*255);
+//                var b=Math.floor(Math.random()*255);
+//                oDiv.style.background="rgb("+r+","+g+","+b+")";
+//               // document.body.appendChild(oDiv);
+//
+//                of.appendChild(oDiv);  //把创建的元素先别添加到页面，而是存在文档碎片里，等全部创建完了再添加到页面
+//            }
+//
+//        }
+//
+//        document.body.appendChild(of);
+//
+//
+//    }
+//getRanddomColor();
+
+
+    function getColor(){
+        var winW=document.documentElement.clientWidth||document.body.clientWidth;
+        var winH=document.documentElement.clientHeight||document.body.clientHeight;
+        var of=document.createDocumentFragment();
+        var  boxW=winW/10;
+        var boxH=winH/10;
+        for(var i=0;i<10;i++){
+            for(var j=0;j<10;j++){
+            var oDiv=document.createElement("div");
+            oDiv.style.width=boxW+"px";
+            oDiv.style.height=boxH+"px";
+            oDiv.style.position="absolute";
+                oDiv.style.top=boxH*i+"px";
+                oDiv.style.left=boxW*j+"px";
+                var r=Math.floor(Math.random()*255);
+                var g=Math.floor(Math.random()*255);
+                var b=Math.floor(Math.random()*255);
+                oDiv.style.background="rgb("+r+","+g+","+b+")";
+               of.appendChild(oDiv);
+            }
+         }
+        document.body.appendChild(of);
+    }
+getColor();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
