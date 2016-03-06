@@ -71,6 +71,27 @@
             voteNum.innerHTML = i;
         }
     })();
+
+
+  ~function(){
+      var i = 0;
+     voteBtn.onclick = function () {
+        i++;
+           voteNum.innerHTML = i;
+         }
+  } ();
+
+   //-->还可以用自定义属性实现
+ voteBtn.count=0;//--把需要保留的数字记录在自己的自定义属性上
+    voteBtn.onclick=function(){
+        voteNum.innerHTML=++this.count;  //--每一次点击的时候，先让自己的自定义属性加1
+    };
+
+
+    voteBtn.onclick=function(){
+        voteNum.innerHTML++;
+    };
+
 </script>
 </body>
 </html>

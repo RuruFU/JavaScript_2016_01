@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+</body>
+</html>
+<script type="text/javascript">
+   var number = 2;
+   var obj = {
+       number : 4,
+       fn1 : ( function() {
+           this.number *= 2;
+           number=number*2;
+           var number=3;
+           return function() {
+               this.number *= 2;
+               number*=3;
+               alert(number);
+           }
+       } )(),
+       db2:function(){this.number*=2}
+   };
+
+   var fn1 = obj.fn1;
+   alert(number);//问这会会弹出什么结果
+   fn1();//这会弹出什么结果
+   obj.fn1();//这次弹出什么结果
+
+   alert(window.number); //这会window.number的结果是什么
+   alert(obj.number);   //这会obj.
+
+
+</script>
+
+
+
+
+
+
+
