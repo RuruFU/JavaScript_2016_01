@@ -29,16 +29,16 @@
 
 
     //2、函数数据类型:函数定义、函数执行
-    function fn() {
-        var total = null;
-        for (var i = 0; i < arguments.length; i++) {
-            var cur = Number(arguments[i]);
-            if (!isNaN(cur)) {
-                total += cur;
-            }
-        }
-        return total;
-    }
+//        function fn() {
+//            var total = null;
+//            for (var i = 0; i < arguments.length; i++) {
+//                var cur = Number(arguments[i]);
+//                if (!isNaN(cur)) {
+//                    total += cur;
+//                }
+//            }
+//            return total;
+//        }
 
     //fn->只是代表当前函数本身(定义)
     //fn()->这个是让当前函数执行(执行)
@@ -61,6 +61,18 @@
     //    (function(){
     //
     //    })();
+
+
+    function fn(i) {
+        return function (n) {
+            console.log(n + (i++));
+        }
+    }
+    var f = fn(10);
+    f(20);//30
+    fn(20)(40);//60
+    fn(30)(50);//
+    f(30);
 </script>
 </body>
 </html>
