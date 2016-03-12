@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        #tab{
+            border: 1px solid green;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 0 0 5px 2px rgba(0,0,0,0.6);
+            -moz-box-shadow:0 0 5px 2px rgba(0,0,0,0.6);
+            box-shadow: 0 0 5px 2px rgba(0,0,0,0.6);
+        }
+       #tab table{
+           border-collapse: collapse;
+       }
+        #tab table tr td{
+            height: 50px;
+            line-height: 50px;
+            border-bottom: 1px dashed hotpink;
+            text-align: center;
+        }
+        #tab table tbody tr:nth-child(even){
+            background: #FF3300;
+        }
+        #tab table tbody tr:nth-child(odd){
+            background: magenta;
+        }
+    </style>
+</head>
+<body>
+<div id="tab">
+    <table width="100%">
+        <thead>
+        <tr>
+            <th>姓名</th>
+            <th>年龄</th>
+            <th>成绩</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>素宁</td>
+            <td>20</td>
+            <td>85</td>
+        </tr>
+        <tr>
+            <td>春萍</td>
+            <td>23</td>
+            <td>91</td>
+        </tr>
+        <tr>
+            <td>倩倩</td>
+            <td>22</td>
+            <td>86</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+<script>
+function listToArray(liskArray){
+    try{
+        return [].slice.call(liskArray,0);
+    }catch(e){
+        var ary=[];
+        for (var i=0;i<liskArray.length;i++){
+            ary[ary.length]=liskArray[i];
+        }
+        return ary;
+    }
+}
+    var oTab=document.getElementById("tab");
+    var oThead=oTab.getElementsByTagName("thead")[0];
+    var oTbody=oTab.getElementsByTagName("tbody")[0];
+    var  rows=oTbody.rows;
+    function tableSort(n){
+        var ary=listToArray(rows);
+        ary.sort(function (a,b){
+            var prev= a.cells[n].innerHTML;
+            var next= b.cells[n].innerHTML;
+            if(isNaN(prev)){
+                return prev.localeCompare(next);
+            }
+            return prev-next;
+        });
+        for (var i=0;i<ary.length;i++){
+            oTbody.appendChild(ary[i]);
+        }
+    }
+    var hRows=oThead.rows[0];
+    var cells=hRows.cells;
+    for(var i=0;i<cells.length;i++){
+        cells[i].index=i;
+        cells[i].onclick=function(){
+            tableSort(this.index);
+        }
+    }
+</script>

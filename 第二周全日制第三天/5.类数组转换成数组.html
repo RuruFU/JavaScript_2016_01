@@ -21,16 +21,16 @@
 //    }
 //[].slice.call(likeArray,0)IE6-7不兼容
     function listToArray(likeArray){
-        try{
-            return [].slice.call(likeArray,0);
-        }catch(e){
-            var ary = [];
-            for(var i = 0;i<likeArray.length;i++){
-                ary[ary.length] = likeArray[i];
-            }
-            return ary;
+    try{
+        return [].slice.call(likeArray,0);
+    }catch(e){
+        var ary = [];
+        for(var i = 0;i<likeArray.length;i++){
+            ary[ary.length] = likeArray[i];
         }
+        return ary;
     }
+}
     var oLis = document.getElementsByTagName("li");
     console.log(listToArray(oLis));
 
