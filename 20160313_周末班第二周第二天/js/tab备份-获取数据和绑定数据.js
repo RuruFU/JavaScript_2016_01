@@ -35,7 +35,7 @@ function bind() {
         for (var key in cur) {
             var oTd = document.createElement("td");
 
-            //->对性别进行特殊的处理 0->男 1->女
+            //->对性别进行特殊的处理 0->男 1->女 
             if (key === "sex") {
                 oTd.innerHTML = cur[key] === 0 ? "男" : "女";
             } else {
