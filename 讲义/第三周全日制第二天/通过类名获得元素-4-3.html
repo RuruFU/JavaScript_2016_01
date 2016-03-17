@@ -39,10 +39,23 @@ function getElesByClass(str){
 	for(var i=0;i<aClassName.length;i++){
 		//eles=byClass(aClassName,eles);
 		var a=[];//准备放筛选结果的
+<<<<<<< HEAD:讲义/第三周全日制第二天/通过类名获得元素-4-3.html
 		var reg=new RegExp("(^| )"+aClassName[i]+"( |$)");//定义一个正则的实例
 		for(var j=0;j<eles.length;j++){
 			if(reg.test(eles[j].className)){
 				a.push(eles[j]);
+=======
+		var reg=new RegExp("(^| )"+aClassName[i]+"( |$)","g");//lastIndex的修改
+		
+		/(^| )b( |$)/g;//只要是加了g，就要考虑lastIndex的感受
+		li1 "b a c"
+		li2 "b c a"
+		
+		reg=/pattern/g
+		for(var j=0;j<eles.length;j++){
+			if(reg.test(eles[j].className)){
+				a.push(eles[j]);	
+>>>>>>> 9f7c2dd9be6836ce2e03bb1ecb8e87905aaba549:讲义/通过类名获得元素-4-3.html
 			}
 				
 		}

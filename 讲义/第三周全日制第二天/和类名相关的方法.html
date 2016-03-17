@@ -27,10 +27,17 @@ function addClass(ele,str){//添加类名
 function removeClass(ele,str){//移除类名的方法
 	var reg=new RegExp("(^| )"+str+"( |$)","g");
 	
+<<<<<<< HEAD:讲义/第三周全日制第二天/和类名相关的方法.html
 	ele.className=ele.className.replace(reg,"");
 
 	//以上写法会有bug，请测出此bug并修正
 	// 没有空格类名会替换掉  加一个空格会修正ele.className=ele.className.replace(reg," ")
+=======
+	ele.className=ele.className.replace(reg," ");
+	//以上写法会有bug，请测出此bug并修正
+	
+	
+>>>>>>> 9f7c2dd9be6836ce2e03bb1ecb8e87905aaba549:讲义/和类名相关的方法.html
 }
 addClass(oDiv,"f");
 </script>
