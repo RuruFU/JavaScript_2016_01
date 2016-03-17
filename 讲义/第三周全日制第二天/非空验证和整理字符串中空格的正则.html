@@ -16,20 +16,24 @@
 <script>
 
 var oInput=document.getElementById("input1");
-oInput.onfocus=function(){
+oInput.onfocus=function(){  //onfocus表单得到焦点
 	if(this.value==this.defaultValue){
 		this.value="";
 	}
 }
 
-oInput.onblur=function(){
+var oSpan=document.createElement("span");  //修改的后
+
+oInput.onblur=function(){   //onblur表单失去焦点
 	//var reg=/^ *$/;//空字符串验证
 	var reg=/ +/g;//一定要加g
 	
 	//if(reg.test(this.value)){
 	if(!this.value.replace(reg,"").length){
-		this.value=this.defaultValue;
-		var oSpan=document.createElement("span");
+		this.value=this.defaultValue;//defaultValue默认的value值
+
+		//var oSpan=document.createElement("span");
+
 		oSpan.innerHTML="*请输入有效女朋友";
 		oSpan.style.color="red";
 		oSpan.style.fontWeight="bold";	
@@ -37,12 +41,15 @@ oInput.onblur=function(){
 	}else{//如果输入正确，则用绿色字表达“输入正确”
 		this.value=this.value.replace(reg,"")
 		var oSpan=document.createElement("span");
+
+		//var oSpan=document.createElement("span");  修改后
+
 		oSpan.innerHTML="输入正确";
 		oSpan.style.color="green";
 		oSpan.style.fontWeight="bold";
 		this.parentNode.appendChild(oSpan);	
 		
 	}
-		
+	o
 }
 </script>

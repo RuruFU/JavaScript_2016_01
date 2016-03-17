@@ -33,16 +33,16 @@
 //做为小测试题
 var eles=document.getElementsByTagName("*");
 function getElesByClass(str){
-	str=str.replace(/^ +| +$/g,"");
-	var aClassName=str.split(/ +/);
-	var eles=document.getElementsByTagName("*");
+	str=str.replace(/^ +| +$/g,"");//空格替换匹配到的正则
+	var aClassName=str.split(/ +/);////字符串拆分成数组
+	var eles=document.getElementsByTagName("*");//查找所有的标签
 	for(var i=0;i<aClassName.length;i++){
 		//eles=byClass(aClassName,eles);
 		var a=[];//准备放筛选结果的
-		var reg=new RegExp("(^| )"+aClassName[i]+"( |$)");
+		var reg=new RegExp("(^| )"+aClassName[i]+"( |$)");//定义一个正则的实例
 		for(var j=0;j<eles.length;j++){
-			if(reg.test(eles[i].className)){
-				a.push(eles[i]);	
+			if(reg.test(eles[j].className)){
+				a.push(eles[j]);
 			}
 				
 		}
@@ -55,4 +55,9 @@ function getElesByClass(str){
 for(var i=0;i<eles.length;i++){
 	eles[i].style.backgroundColor="red";	
 }
+
+
+
+
+
 </script>

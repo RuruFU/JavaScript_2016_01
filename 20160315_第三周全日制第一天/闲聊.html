@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        #a {
+            float: left;
+            /*width: 100px;*/
+            height: 100px;
+            background-image: linear-gradient(right, #00ffea 0%, #0cf93e 25%, #00ffea 50%, #0cf93e 75%, #00ffea 100%);
+            background-image: -webkit-linear-gradient(right, #00ffea 0%, #0cf93e 25%, #00ffea 50%, #0cf93e 75%, #00ffea 100%); /*webkit内核-chrome,safari*/
+            background-image: -moz-linear-gradient(right, #00ffea 0%, #0cf93e 25%, #00ffea 50%, #0cf93e 75%, #00ffea 100%) /*火狐浏览器*/
+        background-image : -ms-linear-gradient(right, #00ffea 0 %, #0cf93e 25 %, #00ffea 50 %, #0cf93e 75 %, #00ffea 100 % ) /*ie浏览器*/
+        background-image : -o-linear-gradient(right, #00ffea 0 %, #0cf93e 25 %, #00ffea 50 %, #0cf93e 75 %, #00ffea 100 % ) /*欧朋浏览器*/
+        }
+
+        #b {
+            float: right;
+            width: 100px;
+            height: 100px;
+            background-image: -webkit-linear-gradient(left, #00ffea 0%, #0cf93e 25%, #00ffea 50%, #0cf93e 75%, #00ffea 100%);
+            background-image: -o-linear-gradient(left, #00ffea 0%, #0cf93e 25%, #00ffea 50%, #0cf93e 75%, #00ffea 100%);
+            background-image: -ms-linear-gradient(left, #00ffea 0%, #0cf93e 25%, #00ffea 50%, #0cf93e 75%, #00ffea 100%);
+            background-image: -moz-linear-gradient(left, #00ffea 0%, #0cf93e 25%, #00ffea 50%, #0cf93e 75%, #00ffea 100%);
+        }
+
+        #a:hover{
+            width: 50%;
+            transition: width 5s linear ;
+            -webkit-transition: width 1s linear 1s;
+        }
+
+        #b:hover{
+            width: 50%;
+            transition: width 1s linear;
+            -webkit-transition: width 1s linear 1s;
+        }
+   /*     #b{
+            animation-name: move;
+            -webkit-animation-name: move;
+            animation-delay: 2s;
+            -webkit-animation-delay: 2s;
+            animation-duration: 5s;
+            -webkit-animation-duration: 5s;
+        }
+        @-webkit-keyframes move {
+            0%{
+                width: 100px;
+            }
+            100%{
+                width: 300px;
+            }
+        }*/
+
+    </style>
+</head>
+<body>
+<div id="tab">
+    <div id="a"> 11</div>
+    <div id="b">22</div>
+</div>
+</body>
+</html>
+
+    <script type="text/javascript">
+    var oDiv=document.getElementById("a");
+    window.setTimeout(function(){
+        oDiv.className="a";
+    },4000);
+
+    //    oDiv.className="";
+</script>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<ul>
+    <li class="a c d b">11</li>
+    <li class="a f e b">222</li>
+    <li class="a b c d">333</li>
+    <li>4444</li>
+    <li class="set a b">555</li>
+    <li class="a set b">666</li>
+    <li class="set a f e">888</li>
+    <li class="f c d b">777</li>
+</ul>
+</body>
+</html>
+<script>
+    function getByClassName(className) {
+
+        var regTrim=/^ +| +$/g;//匹配首或尾包含1到多个空格的正则
+
+        className=className.replace(regTrim,"");
+
+        var classAry=className.split(/ +/);//将className以1到多个空格进行分割
+
+        var eles=document.getElementsByTagName("*");
+        for(var i=0;i<classAry.length;i++){
+            //动态生成正则
+            var reg = new RegExp("(^| )" + classAry[i] + "( |$)");
+            var ary = [];
+            for (var k = 0; k < eles.length; k++) {
+                if (reg.test(eles[k].className)) {
+                    ary.push(eles[k]);
+                }
+            }
+            eles=ary;
+        }
+        return eles;
+    }
+   var eles=getByClassName("a b c");
+
+    for(var i=0;i<eles.length;i++){
+        eles[i].style.backgroundColor="pink";
+    }
+
+
+</script>
