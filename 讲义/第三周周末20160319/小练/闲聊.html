@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        img{
+            display: block;
+            margin: 20px;
+            width: 400px;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<img  realImg="http://img.xtuan.com/upload/xiaoguotu/20130124/2013012316370166232_w.jpg" src="default.gif"/>
+<img  realImg="http://img3.100bt.com/upload/ttq/20131229/1388282194922_middle.jpg" src="default.gif"/>
+<img  realImg="http://sc.jb51.net/uploads/allimg/121221/2-121221091TB12.jpg" src="default.gif"/>
+<img  realImg="http://img.taopic.com/uploads/allimg/130126/240385-1301260PT119.jpg" src="default.gif"/>
+<img  realImg="http://tupian.enterdesk.com/2015/xu/07/03/3/6.jpg" src="default.gif"/>
+<img  realImg="http://img.taopic.com/uploads/allimg/130126/240385-1301260PT119.jpg" src="default.gif"/>
+<img  realImg="http://pic250.quanjing.com/imageclk005/ic01303589.jpg" src="default.gif"/>
+<img  realImg="http://pic250.quanjing.com/imageclk007/ic01704768.jpg" src="default.gif"/>
+<img  realImg="http://img5.duitang.com/uploads/blog/201404/16/20140416170554_Uuvic.thumb.600_0.jpeg" src="default.gif"/>
+<img  realImg="http://7xavvn.com2.z0.glb.qiniucdn.com/22/1397203880305_nv17kg.jpg!bigger" src="default.gif"/>
+</body>
+</html>
+<script type="text/javascript">
+    var oImgs=document.images;
+    function offset(ele){
+        var t=ele.offsetTop;
+        var l=ele.offsetLeft;
+        var p=ele.offsetParent;
+        while(p){
+            if(window.navigator.userAgent.indexOf("MSIE 8")==1){
+                t+= p.offsetTop+ p.clientTop;
+                l+= p.offsetLeft+ p.clientLeft;
+            }else{
+                t+= p.offsetTop;
+                l+= p.offsetLeft;
+            }
+            p= p.offsetParent;
+        }
+        return {left:l,top:t}
+    }
+    for(var i=0;i<oImgs.length;i++){
+        var oImg=oImgs[i];
+        oImg.b=offset(oImg).top+oImg.offsetHeight
+    }
+    window.onscroll= function () {
+        var h=(document.documentElement.scrollTop||document.body.scrollTop)+(document.documentElement.clientHeight||document.body.clientHeight);
+        for(var i=0;i<oImgs.length;i++){
+            var oImg=oImgs[i];
+            if(oImg.loaded)continue;
+            loadImg(oImg,h);
+        }
+    }
+    function loadImg(oImg,h){
+        if(h>oImg.b){
+            var realSrc=oImg.getAttribute("realImg")+"?"+Math.random();
+            oImg.src="o_loading.gif";
+            var tempImg=new Image;
+            tempImg.src=realSrc;
+            tempImg.onload=function(){
+                oImg.src=realSrc;
+                oImg.loaded=true
+            }
+        }
+    }
+</script>

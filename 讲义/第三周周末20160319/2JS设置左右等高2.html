@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <title>无标题文档</title>
 <style type="text/css">
-div{ width:400px; margin:10px; float:left; background:#ccc;}
-
+#div1{ width:400px; margin:10px; float:left; background:#ccc;}
+#div2{width: 200px; margin:20px; float:left; background:#7ff68d;}
 </style>
 </head>
 
@@ -24,6 +24,16 @@ div{ width:400px; margin:10px; float:left; background:#ccc;}
 </body>
 </html>
 <script>
-//请自行完成左右等高的计算 
+//请自行完成左右等高的计算
+
+//var a=div1.currentStyle.height;
+//var b=div2.currentStyle.height
+var ele1=document.getElementById("div1");
+var ele2=document.getElementById("div2");
+if(ele1.clientHeight>ele2.clientHeight){
+    ele1.style.height=ele2.clientHeight+"px";
+}else{
+    ele1.style.height=ele2.clientHeight+"px";
+}
 
 </script>
