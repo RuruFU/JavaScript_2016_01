@@ -1,76 +1,60 @@
+
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>无标题文档</title>
+	<meta charset="utf-8">
+	<title>无标题文档</title>
 </head>
 
 <body>
 <ul>
-<li class="select">一</li>
-<li class="abc a-b-c a_b_c">二</li>
-<li class="a b c ">三</li>
-<li class="select a b c ">一</li>
-<li>二</li>
-<li>三</li>
-<li class="a b c d select">一</li>
-<li class="a b c d">二</li>
-<li>三</li>
-<li class="select          a-b-c">一</li>
-<li class="a b select c d e">二</li>
-<li>三</li>
-<li class="select a b c d">一</li>
-<li>二</li>
-<li>三</li>
-<li class="select">一</li>
-<li  class="a b c d">二</li>
-<li>三</li>
-<li class="aselectb a-select-b">三</li>
+	<li class="select">一</li>
+	<li class="abc a-b-c a_b_c">二</li>
+	<li class="a b c ">三</li>
+	<li class="select a b c ">一</li>
+	<li>二</li>
+	<li>三</li>
+	<li class="a b c d select">一</li>
+	<li class="a b c d">二</li>
+	<li>三</li>
+	<li class="select          a-b-c">一</li>
+	<li class="a b select c d e">二</li>
+	<li>三</li>
+	<li class="select a b c d">一</li>
+	<li>二</li>
+	<li>三</li>
+	<li class="select">一</li>
+	<li  class="a b c d">二</li>
+	<li>三</li>
+	<li class="aselectb a-select-b">三</li>
 </ul>
 </body>
 </html>
 <script>
-//做为小测试题
-var eles=document.getElementsByTagName("*");
-function getElesByClass(str){
-	str=str.replace(/^ +| +$/g,"");//空格替换匹配到的正则
-	var aClassName=str.split(/ +/);////字符串拆分成数组
-	var eles=document.getElementsByTagName("*");//查找所有的标签
-	for(var i=0;i<aClassName.length;i++){
-		//eles=byClass(aClassName,eles);
-		var a=[];//准备放筛选结果的
-<<<<<<< HEAD:讲义/第三周全日制第二天/通过类名获得元素-4-3.html
-		var reg=new RegExp("(^| )"+aClassName[i]+"( |$)");//定义一个正则的实例
-		for(var j=0;j<eles.length;j++){
-			if(reg.test(eles[j].className)){
-				a.push(eles[j]);
-=======
-		var reg=new RegExp("(^| )"+aClassName[i]+"( |$)","g");//lastIndex的修改
-		
-		/(^| )b( |$)/g;//只要是加了g，就要考虑lastIndex的感受。
-		//li1 "b a c" lastIndex
-		//li2 "b c a"  
-		
-		reg=/pattern/g
-		for(var j=0;j<eles.length;j++){
-			if(reg.test(eles[j].className)){
-				a.push(eles[j]);	
->>>>>>> 9f7c2dd9be6836ce2e03bb1ecb8e87905aaba549:讲义/通过类名获得元素-4-3.html
+	//做为小测试题
+	//var eles=document.getElementsByTagName("*");
+	function getElesByClass(str){
+		str=str.replace(/^ +| +$/g,"");
+		var aClassName=str.split(/ +/);
+		var eles=document.getElementsByTagName("*");
+		for(var i=0;i< aClassName.length;i++){
+			//eles=byClass(aClassName,eles);
+			var a=[];//准备放筛选结果的
+			var reg=new RegExp("(^| )"+aClassName[i]+"( |$)");
+			for(var j=0;j<eles.length;j++){
+				if(reg.test(eles[j].className)){
+					a.push(eles[j]);
+				}
+
 			}
-				
+			eles=a;//相当于byClass方法中的return a这一步
 		}
-		eles=a;//相当于byClass方法中的return a这一步	
+		return eles;
+
 	}
-	return eles;
-	
-}
-
-for(var i=0;i<eles.length;i++){
-	eles[i].style.backgroundColor="red";	
-}
-
-
-
-
-
+	//
+	var eles=getElesByClass("a b c");
+	for(var i=0;i<eles.length;i++){
+		eles[i].style.backgroundColor="red";
+	}
 </script>

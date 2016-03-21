@@ -1,95 +1,48 @@
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>无标题文档</title>
+	<meta charset="utf-8">
+	<title>无标题文档</title>
 </head>
 
 <body>
-请自行修正提示信息重复的问题
+请自行修证提示信息重复的问题
 <p>
-<input value="请输入您的前女友" id="input1">
+	<input value="请输入您的前女友" id="input1">
 </p>
 </body>
 </html>
 
 <script>
 
-var oInput=document.getElementById("input1");
-<<<<<<< HEAD:讲义/第三周全日制第二天/非空验证和整理字符串中空格的正则.html
-oInput.onfocus=function(){  //onfocus表单得到焦点
-=======
-//var oSpan=document.createElement("span");
-oInput.onfocus=function(){//onfocus表单得到焦点
->>>>>>> 9f7c2dd9be6836ce2e03bb1ecb8e87905aaba549:讲义/非空验证和整理字符串中空格的正则.html
-	if(this.value==this.defaultValue){
-		this.value="";
-	}
-}
-
-<<<<<<< HEAD:讲义/第三周全日制第二天/非空验证和整理字符串中空格的正则.html
-var oSpan=document.createElement("span");  //修改的后
-
-oInput.onblur=function(){   //onblur表单失去焦点
-=======
-oInput.onblur=function(){//onblur表单失去焦点
->>>>>>> 9f7c2dd9be6836ce2e03bb1ecb8e87905aaba549:讲义/非空验证和整理字符串中空格的正则.html
-	//var reg=/^ *$/;//空字符串验证
-	var reg=/ +/g;//一定要加g
-	
-	//if(reg.test(this.value)){
-		var oSpan=document.getElementById("message");
-	if(!this.value.replace(reg,"").length){
-<<<<<<< HEAD:讲义/第三周全日制第二天/非空验证和整理字符串中空格的正则.html
-		this.value=this.defaultValue;//defaultValue默认的value值
-
-		//var oSpan=document.createElement("span");
-
-		oSpan.innerHTML="*请输入有效女朋友";
-		oSpan.style.color="red";
-		oSpan.style.fontWeight="bold";	
-		this.parentNode.appendChild(oSpan);
-	}else{//如果输入正确，则用绿色字表达“输入正确”
-		this.value=this.value.replace(reg,"")
-		var oSpan=document.createElement("span");
-
-		//var oSpan=document.createElement("span");  修改后
-
-		oSpan.innerHTML="输入正确";
-		oSpan.style.color="green";
-		oSpan.style.fontWeight="bold";
-		this.parentNode.appendChild(oSpan);	
-=======
-		this.value=this.defaultValue;
-		
-		if(!oSpan){//如果没有这个提示元素，则创建
-			var oSpan=document.createElement("span");
-			oSpan.id="message";
-			oSpan.innerHTML="*请输入有效女朋友";
-			oSpan.style.color="red";
-			oSpan.style.fontWeight="bold";	
-			this.parentNode.appendChild(oSpan);
-		}else{//有这个提示元素则直接修改
-			oSpan.innerHTML="*请输入有效女朋友";
-			oSpan.style.color="red";
+	var oInput=document.getElementById("input1");
+	oInput.onfocus=function(){
+		if(this.value==this.defaultValue){//defaultValue 默认值
+			this.value="";
 		}
-	}else{//如果输入正确，则用绿色字表达“输入正确”
-		this.value=this.value.replace(reg,"")
-		if(!oSpan){
-			
+	}
+
+	oInput.onblur=function(){//焦点丢失
+		//var reg=/^ *$/;//空字符串验证
+		var reg=/ +/g;//一定要加g
+
+		//if(reg.test(this.value)){
+		if(!this.value.replace(reg,"").length){
+			this.value=this.defaultValue;
 			var oSpan=document.createElement("span");
-			oSpan.id="message";
+			oSpan.innerHTML="*请输入有效女朋友";
+			oSpan.style.color="red";
+			oSpan.style.fontWeight="bold";
+			this.parentNode.appendChild(oSpan);
+		}else{//如果输入正确，则用绿色字表达“输入正确”
+			this.value=this.value.replace(reg,"");
+			var oSpan=document.createElement("span");
 			oSpan.innerHTML="输入正确";
 			oSpan.style.color="green";
 			oSpan.style.fontWeight="bold";
-			this.parentNode.appendChild(oSpan);	
-		}else{
-			oSpan.innerHTML="输入正确";
-			oSpan.style.color="green";
+			this.parentNode.appendChild(oSpan);
+
 		}
->>>>>>> 9f7c2dd9be6836ce2e03bb1ecb8e87905aaba549:讲义/非空验证和整理字符串中空格的正则.html
-		
+
 	}
-	o
-}
 </script>
