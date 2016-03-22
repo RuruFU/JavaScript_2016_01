@@ -19,3 +19,15 @@ li{ position:relative; width:100px; height:2em; padding:0; margin:10px; backgrou
 </ul>
 </body>
 </html>
+<script>
+    var oLis=document.getElementsByTagName("li");
+    for(var i=0;i<oLis.length;i++){
+        var oLi=oLis.item(i);
+        fn(oLi,i);
+    }
+    function fn(oLi,i){
+        window.setTimeout(function(){
+            oLi.style.left=100*(i+1)+"px";
+        },1000*(i+1));
+    }
+</script>

@@ -31,12 +31,12 @@ var oInputs=document.getElementsByTagName("input");
 //此函数使用方法如下：
 oInputs.item(0).onkeyup=function(){
 		
-		validate(this,/某正则/,"输入正确","输入错误")
+		validate(this,/^[a-zA-Z]+\w+$/,"输入正确","输入错误")
 }
 
 oInputs.item(1).onkeyup=function(){
 
-	validate(this,/某正则/,"输入正确","输入错误")
+	validate(this,/^[\u4e00-\u9fa5]{2,4}$/,"输入正确","输入错误")
 }
 oInputs.item(2).onkeyup=function(){
 
