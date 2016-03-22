@@ -27,21 +27,36 @@
 		var reg=/ +/g;//一定要加g
 
 		//if(reg.test(this.value)){
-		if(!this.value.replace(reg,"").length){
-			this.value=this.defaultValue;
-			var oSpan=document.createElement("span");
-			oSpan.innerHTML="*请输入有效女朋友";
-			oSpan.style.color="red";
-			oSpan.style.fontWeight="bold";
-			this.parentNode.appendChild(oSpan);
-		}else{//如果输入正确，则用绿色字表达“输入正确”
-			this.value=this.value.replace(reg,"");
-			var oSpan=document.createElement("span");
-			oSpan.innerHTML="输入正确";
-			oSpan.style.color="green";
-			oSpan.style.fontWeight="bold";
-			this.parentNode.appendChild(oSpan);
+		var oSpan = document.getElementById("span1");
 
+		if(!this.value.replace(reg,"").length){
+			if(!oSpan){
+				var oSpan=document.createElement("span");
+				oSpan.innerHTML="*请输入有效女朋友";
+				oSpan.id = "span1";
+				oSpan.style.color="red";
+				oSpan.style.fontWeight="bold";
+				this.parentNode.appendChild(oSpan);
+			}else{
+				oSpan.innerHTML = "*请输入有效女朋友";
+				oSpan.style.color="red";
+			}
+		}else{//如果输入正确，则用绿色字表达“输入正确”
+
+			this.value=this.value.replace(reg,"");
+			if(!oSpan) {
+				var oSpan = document.createElement("span");
+				oSpan.innerHTML = "输入正确";
+				oSpan.id = "span1";
+				oSpan.style.color = "green";
+				oSpan.style.fontWeight = "bold";
+				this.parentNode.appendChild(oSpan);
+			}
+			else{
+				oSpan.innerHTML = "输入正确";
+				oSpan.style.color = "green";
+				oSpan.style.fontWeight = "bold";
+			}
 		}
 
 	}

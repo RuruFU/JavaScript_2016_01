@@ -110,7 +110,7 @@ DOM.next=function next(ele){//获得ele相邻的弟弟元素节点，返回值�
 }
 
 DOM.previous=function previous(ele){//获得ele相邻的哥哥元素节点，返回值最多只有一个元素
-	
+
 }
 DOM.nextSiblings=function (ele){//获得ele相邻的弟弟们元素节点，返回的是集合
 	
