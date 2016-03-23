@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        #form{
+            width: 450px;
+            padding: 8px;
+            margin: 20px;
+            border-width: 1px;
+            border-style: solid;
+            border-color:#dedede #bababa #aaa #bababa;
+            box-shadow: 0 3px 3px rgba(255,255,255,.1),
+            0 3px 0 #bbb,
+            0 4px 0 #aaa,
+            0 5px 5px #444; /*正:右阴影 下阴影 负:左阴影上阴影*/
+            border-radius: 5px;
+            background-image: -webkit-linear-gradient(top, #f6f6f6, #eae8e8);
+            overflow: hidden;
+        }
+       .text{
+            width: 330px;
+            height: 20px;
+            float: left;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 10px 5px;
+           box-shadow: 0 2px 1px #ddd inset;
+        }
+        .btn{
+            float: right;
+            width: 100px;
+            height: 42px;
+            border: 1px solid #00748f;
+            background-image: -webkit-linear-gradient(top, #31b2c3, #0483a0);
+            color: #fff;
+            font-size: 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        input:focus{
+            outline: none;
+        }
+        .btn:hover,
+        .btn:focus {
+            background-color: #31b2c3;
+            background-image: -webkit-gradient(linear, left top, left bottom, from(#0483a0), to(#31b2c3));
+        }
+        .btn:active {
+            outline: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
+        }
+    </style>
+</head>
+<body>
+<div id="form">
+    <input type="text"  placeholder="search for css3,html5,jquery" class="text"/>
+    <input type="button" class="btn" value="GO"/>
+</div>
+</body>
+</html>
