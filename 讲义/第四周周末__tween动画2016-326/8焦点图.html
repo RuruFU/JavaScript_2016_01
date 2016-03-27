@@ -10,6 +10,9 @@
 black;}
 #btn{ list-style:none; padding:0; margin:0; width:300px; position:absolute; right:30px; bottom:30px; height:50px; }
 #btn li{ padding:0; margin:10px; width:30px; height:30px; border-radius:15px; background:orange; color:#606; font-size:18px; font-weight:bold; float:left; line-height:30px; text-align:center; cursor:pointer; }
+#btn li.promoted{
+    background: lime;
+}
 
 </style>
 
@@ -25,7 +28,7 @@ black;}
         <div style="background:pink;">五</div>
     </div>
     <ul id="btn"> <!-- 按钮 -->
-    	<li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+    	<li class="promoted">1</li><li>2</li><li>3</li><li>4</li><li>5</li>
     </ul>
 
 </div>
@@ -33,6 +36,7 @@ black;}
 </html>
 <script src="animate.js"></script>
 <script>
+/*
 var oLis=document.getElementById("btn").getElementsByTagName("li");
 for(var i=0;i<oLis.length;i++){
 	oLis.item(i).n=i;
@@ -40,5 +44,50 @@ for(var i=0;i<oLis.length;i++){
 		animate(inner,{left:this.n*-500},800);
 	}
 }
+*/
 
+var oLis=document.getElementById("btn").getElementsByTagName("li");
+var oDiv=document.getElementById("inner").getElementsByTagName("div").item(0);
+inner.appendChild(oDiv.cloneNode(true));
+inner.style.width=inner.offsetWidth+oDiv.offsetWidth+"px";
+
+for(var i=0;i<oLis.length;i++){
+    oLis.item(i).n=i;
+    oLis.item(i).onclick=function(){
+        animate(inner,{left:this.n*-500},800);
+        step=this.n;
+        current(step);
+        clearInterval(autoTimer);
+        autoTimer=window.setTimeout(function(){
+            autoTimer=window.setInterval(autoMove,2000);
+        },3000);
+    }
+}
+
+
+var step=0;
+function autoMove(){
+    step++;
+    if(step>=6){ //索引5是第六张 ，从索引4走到索引5 ，就是从第五张走到第六张，而
+
+        inner.style.left=0;//把图片的坐标切到第0张上
+        step=1;  //从索引0走到索引1上
+    }
+    if(step===5){
+        current(0);
+    }else{
+        current(step);
+    }
+
+    animate(inner,{left:step*-500},600);
+}
+var autoTimer=window.setInterval(autoMove,2000);
+
+
+    function current(n){
+        for(var i=0;i<oLis.length;i++){
+            oLis[i].className="";
+        }
+        oLis[n].className="promoted"
+    }
 </script>

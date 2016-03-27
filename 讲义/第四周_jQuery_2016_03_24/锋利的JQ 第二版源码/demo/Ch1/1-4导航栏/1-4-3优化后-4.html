@@ -49,7 +49,7 @@
 
 </body>
 </html>
-<script src="../../../../../第三周周末选项卡和DOM库_20160320/DOM.js"></script>
+<script src="../../../DOM.js"></script>
 <script>
 var level1s=DOM.getElesByClass("level1");
 var oAs=[];
@@ -73,13 +73,11 @@ for(var i=0;oAs.length;i++){
 			DOM.children(otherLis[i],"ul")[0].style.display="none";
 		}
 		
-		/*
 		//然后再让这些ul隐藏
 		for(var i=0;i<otherUls.length;i++){
 			otherUls[i].style.display="none";	
 		}
-		*/
-		
+
 		return false;
 	}
 }
