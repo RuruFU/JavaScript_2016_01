@@ -51,7 +51,7 @@ for(var i=0;i<oLis.length;i++){
 		clearTimeout(autoTimer);//和clearInterval通用
 		//当点击事件触发后五秒钟再启动这个自动的播放，自动播放还是每隔两秒一次
 		autoTimer=window.setTimeout(function(){
-			autoTimer=window.setInterval(autoMove,2000);
+			autoTimer=window.setInterval(autoRight,2000);
 		},3000);
 		//3000,3+2 >3 <5;10 autoMove,执行了两次
 		
@@ -61,7 +61,7 @@ for(var i=0;i<oLis.length;i++){
 
 
 var step=0;
-function autoMove(){
+/*function autoMove(){
 	step++;
 	if(step>=6){//索引5是第六张，从索引4走到索引5，就是从第五张走到第六张，而第六张是第一张的复本，在视觉上就相当于从第五张走到了第一张
 		//一但走到第六张，则切换到第一张，然后从第一张往第二张上走
@@ -69,13 +69,13 @@ function autoMove(){
 		step=1;//表示从索引0走到索引1上
 	}
 	if(step==5){//防止lis集合越界
-		current(0)	
+		current(0)
 	}else{
 		current(step);
 	}
 	animate(inner,{left:step*-500},600);
 }
-var autoTimer=window.setInterval(autoMove,2000);
+var autoTimer=window.setInterval(autoMove,2000);*/
 
 function current(n){
 		for(var i=0;i<oLis.length;i++){
@@ -83,4 +83,24 @@ function current(n){
 			}
 			oLis[n].className="promoted";
 }
+
+
+
+
+function autoRight(){
+	step--;
+	if(step<0){
+		//alert("到了最左边了，没法走了");
+		inner.style.left="-2500px";
+		step=4;//从索引5走到索引4
+		//alert("现在已经切换过来了")
+	}
+	if(step==6){//防止lis集合越界
+		current(4)
+	}else{
+		current(step);
+	}
+	animate(inner,{left:step*-500},600);
+}
+window.setInterval(autoRight,2000);
 </script>
