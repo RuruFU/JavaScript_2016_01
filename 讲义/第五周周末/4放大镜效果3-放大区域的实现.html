@@ -62,9 +62,11 @@ content.onmousemove=function(e){
 		top=e.clientY-this.offsetTop-oMask.offsetHeight/2+"px";
 		*/
 			if(l<=0){
-				left=0;	
+				left=0;
+				oShow.scrollLeft=0;
 			}else if(l>=maxL){
-				left=maxL+"px";	
+				left=maxL+"px";
+				oShow.scrollLeft=maxL/scaleY;
 			}else{
 				left=l+"px";
 				oShow.scrollLeft=l/scaleX;//控制放大显示区水平移动
@@ -72,8 +74,10 @@ content.onmousemove=function(e){
 			
 			if(t<=0){
 				top=0;
+				oShow.scrollTop=0;
 			}else if(t>=maxT){
 				top=maxT+"px";
+				oShow.scrollTop=maxT/scaleX;
 			}else{
 				top=t+"px";
 				oShow.scrollTop=t/scaleY;//控制放大显示区重直移动
