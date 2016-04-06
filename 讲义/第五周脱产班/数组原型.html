@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        #div1,#div2{
+            height: 100px;
+            width: 100px;
+            position: absolute;
+            top: 100px;
+            cursor: move;
+            background: goldenrod;
+            border-radius: 50%;
+        }
+        </style>
+</head>
+<body>
+<div id="div1"></div>
+<div id="div2" style="background: greenyellow; top: 200px;"></div>
+</body>
+</html>
+<script>
+
+ var ary=[1,2,3,4,5,6];
+ // 循环遍历 每一项  通过传入的方法 return 运算式 是一个当前数组的和
+ Array.prototype.myReduce=function (callback) {
+     var total=null;
+     for(var i=0;i<this.length;i++){
+         total =callback(total,this[i]);
+     }
+     return total;
+ }
+ function add(currentotal,indexValue) {
+     return currentotal+=indexValue;
+ }
+
+ // 循环遍历 每一项 不产生新数组 通过传入的方法 return 运算式 是boolean 只要是有一个为true就返回
+ Array.prototype.myEvery=function (callback) {
+     var bool=false;
+     for(var i=0;i<this.length;i++){
+         bool= callback(this[i],i,this);
+         if(bool==false){
+             return bool;
+         }
+         return bool;
+     }
+ }
+   // 循环遍历 每一项 不产生新数组 通过传入的方法 return 运算式 是boolean 只要是有一个为true就返回
+ Array.prototype.mySome=function (callback) {
+     var bool=false;
+     for(var i=0;i<this.length;i++){
+         bool= callback(this[i],i,this);
+         if(bool==true){
+             return bool;
+         }
+     }
+ }
+ // 循环遍历 每一项 不产生新数组
+ Array.prototype.myForEach=function (callback,_this) {
+     for(var i=0;i<this.length;i++){
+         callback.call(_this,this[i],i,this);
+     }
+ }
+ // map的功能 就是循环遍历每一项并且返回 一个新的数组
+    Array.prototype.myMap=function (callback) {
+        var ary=[];
+        for(var i=0;i<this.length;i++){
+            ary.push(callback(this[i],i,this));
+        }
+        return ary;
+        }
+    function fn(value) {
+        return value+2;
+    }
+
+ var ary = [1,2,3,4];
+ var ary1 = ary.myMap(function (value,index,self) {
+       return value *2;
+ });
+ alert(ary1);
+ // 功能是只返回 符合要求的 并且表达式必须是boolean 产生新数组
+ Array.prototype.myFilter=function (callback) {
+     var ary=[];
+     for(var i=0;i<this.length;i++){
+         var value=null;
+         value=(callback(this[i],i,this));
+         if(value==true){
+             ary.push(this[i]);
+         }
+     }
+     return ary;
+ }
+
+</script>

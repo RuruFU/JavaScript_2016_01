@@ -15,7 +15,7 @@ var ele=document.getElementsByTagName("h1").item(0);;
 
 //事件对象本身 IE：window.event,内置的arguments[0]
 //阻事件默认行为：DOM0级事件中都一样 return false,DOM2
-	//DOM2级事件标准浏览器用e.preventDefault(),IE用e.returnValue=false;
+	//DOM2级事件标准浏览器用e.preventDefault()，  IE用e.returnValue=false;
 	//DOM2级事件只能用e.preventDefault()来阻止事件的默认
 ele.addEventListener
 var oA=document.getElementsByTagName("a").item(0)
@@ -33,8 +33,13 @@ oA.attachEvent("onclick",function(){
 //事件源
 	//标准浏览器用e.target,IE用e.srcElement;
 //e.pageX,e.pageY IE不支持
+//在页面没有滚动的情况下，pageX和pageY的值与clientX和clientY的值相等，IE6-8不支持  可以通过坐标和滚动信息计算出来，需要用到document.documentElement(\body).scrollLeft(\scrollTop)属性
 
 //e.relatedTarget IE不支持
+//这个属性只对于mouseover和mouseout事件才包含值；其他事件这个属性值是null     IE6-8不支持relatedTarget
+//但同样保存着同样信息的不同属性，   mouseover事件触发的时候，IE的fromElement属性保存了相关元素；在mouseout事件触发时，IE的toElement属性中保存着相关属性
+
+
 
 //DOM2事件绑定的机制完全不同。
 	//addEventListener,removeEventListener

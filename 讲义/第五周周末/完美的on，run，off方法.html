@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>on run off</title>
+    <style type="text/css">
+        #div1 {
+            width: 100px;
+            height: 100px;
+            background: red
+        }
+    </style>
+</head>
+<body>
+<div id="div1"></div>
+<script>
+    /*
+    把所有给ele绑定的方法放到一个数组里，每次触发的时候遍历数组，按顺序执行数组中的每一个方法
+     */
+    function on(ele,type,fn){//给ele的事件绑定方法。如果支持addEventListener，就直接使用并return。如果不支持，则创建一个程序池，将所有的方法写到这个程序池中，每当触发这个方法的时候，将程序池中的所有方法遍历执行。此处的程序池就是ele的自定义属性数组。程序池执行的时候要作的处理：改变this的指向（步骤2）、改变方法的执行顺序（用数组的方式将方法保存，并按顺序遍历执行数组的方法）、避免重复绑定（步骤4）
+        if(ele.addEventListener){//1、判断是否支持这个方法，如果支持，直接return
+            ele.addEventListener(type,fn);
+            return;
+        }
+//        else if(ele.attachEvent){
+//            ele.attachEvent("on"+type,function(){run.call(ele)});
+//        }//2、这样写会执行多次，所以找一个只执行一次的地方，所以写在30行，如此不要脸的技巧。此处先将26行保留，写完步骤3的时候，将这一行加在步骤3中
+        if(!ele["event"+type]){//3、判断数组是否存在，如果不存在，新建这个数组，这个数组用来保存所有的方法。注意：数组要作为ele自定义属性，来让其它的方法可以找到这个数组，并将数组名加方法类型后缀，来识别不同的方法类型。
+            ele["event"+type]=[];
+            ele.attachEvent("on"+type,function(){run.call(ele)});//2、把run方法绑定给ele，并把run的this指向ele。
+        }
+        var a=ele["event"+type];//4、遍历数组，查看数组中是否有fn这个方法，避免重复绑定
+        for(var i=0;i< a.length;i++){
+            if(a[i]==fn){//5、如果数组中有fn这个方法，不再绑定，直接return
+                return;
+            }
+        }
+        a.push(fn);//6、数组中不存在fn这个方法，则将fn这个方法加到数组中
+
+    }
+    function run(e){//遍历数组，并执行数组中的每一个方法。执行时注意将每一个方法的this执行触发的对象，即这个方法中的this。这个方法中的this是由30行传进来的ele
+        e=window.event;//1、当不支持addEventListener方法的时候才会调用run这个方法，所以此处的事件对象e是window.event，不必写e||window.event
+        var type= e.type;
+        //2、处理其它不兼容问题
+        if(!e.target){//如果不支持e.target，即其它标准浏览器的方法也不支持，可以用这一个属性来判断
+            e.target= e.srcElement;
+            e.pageX= e.clientX+(document.documentElement.scrollLeft||document.body.scrollTop);//注意这里+号后边的要加括号，否则意思不同
+            e.pageY= e.clientY+(document.documentElement.scrollTop||document.body.scrollTop);
+            e.stopPropagation= function(){e.cancelBubble=true;};//ie中的e.cancelBubble是一个方法，所以要=function
+            e.preventDefault=function(){e.returnValue=false;};//同上，ie中的e.returnValue是一个方法，所以要=function
+        }
+        var a=this["event"+type];//3、接收ele上的自定义属性数组
+        if(a&& a.length){//4、判断数组是否存在，即ele是否有绑定的方法
+            for(var i=0;i< a.length;i++){//5、遍历执行数组中的方法
+                if(typeof a[i]=="function"){//这一步的判断是因为off方法中，把数组中解绑的方法置为null，所以数组中存在null这样的项，所以要判断这一项是否是function
+                    a[i].call(this,e);//6、a[i]为一个方法，将方法中的this指向ele，并像标准浏览器那样传事件对象e。因为给ele绑定的是run方法，所以触发run方法的时候会给run传事件对象。这里要在run中执行ele自定义属性数组中的方法a[i]，因为没有直接触发a[i]，所以浏览器不会给a[i]传事件对象，所以要将run中的事件对象传给a[i]
+                }else{
+                    a.splice(i,1);//如果这一项是null，则将null删除。数组删除以后会发生数组塌陷，所以用下一句i--解决数组塌陷的问题
+                    i--;
+                }
+            }
+        }
+
+    }
+    function off(ele,type,fn){//遍历ele的自定义属性数组，如果数组中的某一项==fn，则将fn在数组中的位置用null占用
+        if(ele.removeEventListener){//1、如果支持标准浏览器的removeEventListener，则直接return
+            ele.removeEventListener(type,fn);
+            return;
+        }
+        var a=ele["event"+type];//2、用a接收ele的自定义属性数组
+        if(a&& a.length){//如果a存在
+            for(var i=0;i< a.length;i++){//3、遍历数组，如果数组中存在fn，则将fn在数组中的位置用null占用，并在运行的时候，即run方法中删除
+                if(a[i]==fn){
+                    a[i]=null;
+                    return;//由于绑定的时候已经解决了重复绑定的问题，所以在遍历数组的时候，当第一次遇到等于fn的项，就不需要再继续遍历了，所以return
+                }
+            }
+        }
+    }
+
+
+    var ele = document.getElementById("div1");
+    function fn1() {
+        alert(1)
+    }
+    function fn2() {
+        alert(2)
+    }
+    var counter = 0;
+    function fn3() {
+        counter++;
+        if (counter == 1) {
+            off(ele, "click", fn1);
+            off(ele, "click", fn2);
+            off(ele, "click", fn3);
+            off(ele, "click", fn9);//在第一次点击的时候已经解绑，由于fn9再fn3后边执行，所以第一次点击的时候就不会弹出fn9
+        }
+        alert(3)
+    }
+    function fn4() {
+        alert(4)
+    }
+    function fn5() {
+        alert(5)
+    }
+    function fn6() {
+        alert(6)
+    }
+    function fn7() {
+        alert(7)
+    }
+    function fn8() {
+        alert(8)
+    }
+    function fn9() {
+        alert(9)
+    }
+    on(ele, "click", fn1);
+    on(ele, "click", fn2);
+    on(ele, "click", fn3);
+    on(ele, "click", fn4);
+    on(ele, "click", fn5);
+    on(ele, "click", fn6);
+    on(ele, "click", fn7);
+    on(ele, "click", fn8);
+    on(ele, "click", fn9);
+</script>
+</body>
+</html>

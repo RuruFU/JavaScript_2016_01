@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ECMA5数组新增方法</title>
+</head>
+<body>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<script type="text/javascript">
+    //面试题：如何判断当前元素是否是数组呢？ele
+     //1)  ele instanceOf Array  返回true
+    // 2)  ele.constructor === "Array" 返回true
+    // 3) Array.isArray(ele); 返回true
+    // 4) Object.prototype.toString.call(ele)   ---->> "[object Array]"
+    //ECMA5数组新增方法 --->>http://www.zhangxinxu.com/wordpress/2013/04/es5%E6%96%B0%E5%A2%9E%E6%95%B0%E7%BB%84%E6%96%B9%E6%B3%95/#foreach
+    //1-->>forEach遍历数组,
+    //作用：forEach是Array新方法中最基本的一个，就是遍历，循环。不返回内容，内部操数组
+    //遍历数组方法总结：
+    //注意：Array在ES5新增的方法中，参数都是function类型 function(value,index,self){}
+    //forEach方法中的function回调支持3个参数，第1个是遍历的数组内容；第2个是对应的数组索引，第3个是数组本身
+    /*
+     * 1) for循环
+     * 2) for-- in
+     * 3)  forEach
+     * */
+
+    //1、jQ中的forEach方法：
+    //$.each([], function(index, value, array) {
+    //        // ...
+    //    });
+
+    //2、原生JS中的forEach方法
+    // ary.forEach(function (value,index,self) {
+    //
+    //    })
+    //遍历元素
+    //    var ary = [1, 2, 3, 4];
+    //    for (var i = 0; i < ary.length; i++) {
+    //        console.log(ary[i]);
+    //    }
+    //
+    //    for (var key in ary) {
+    //        console.log(ary[key]);
+    //    }
+    //
+    //    ary.forEach(function (value, index, self) {
+    //        console.log(value);
+    //    });
+
+    //3、如果这第2个可选参数不指定，则使用全局对象代替（在浏览器是为window），严格模式下甚至是undefined.
+
+    //4、forEach不会遍历纯粹“占着官位吃空饷”的元素的
+    //var ary1 = [1, 2, 3];
+    //    delete  ary1[1];
+    //    ary1.forEach(function (value, index, slef) {
+    //        console.log(value);  // 1 3  删除的不会在进行遍历了
+    //    });
+
+    var obj = [1, 3, , 4];  //------------->> [1,3,undefined,4]
+    console.log(obj[2]) // --->undefined
+    console.log(obj.hasOwnProperty(2)); // ----> false
+    //hasOwnProperty: 判断当前属性是否是这个对象的一个属性，判断私有的，不能判断共有的，是的话返回true,否则false
+    // ----->>用法:obj.hasOwnProperyt("attr");
+    // in 共有 和私有的都可以，有的话就返回true,没有返回false  ------>>用法："att" in obj
+    //    //兼容写法，挂到类的原型上
+    if (!Array.prototype.forEach) {
+        Array.prototype.forEach = function forEach(fn, context) {
+            for (var i = 0; i < this.length; i++) {       //空的是没法执行的，空默认值是undefined
+                if (typeof  fn === "function" && Object.prototype.hasOwnProperty.call(this, i)) {
+                    fn.call(context, this[i], i, this);   // this.hasOwnProperty(i);
+                }
+            }
+        };
+    }
+    //    var ary = [1, 2, 3, 4];
+    //    ary.forEach(function (value, index, self) {
+    //        // alert(value * 2);
+    //    })
+    //
+    //    var oDivs = document.getElementsByTagName("div");
+    //    //遍历类数组****重点
+    //    Array.prototype.forEach.call(oDivs, function (value, index, self) {
+    //        console.log(this);
+    //        value.innerHTML = index;
+    //    }, oDivs);
+    //
+    //    //类数组转为数组
+    //    var listAry = Array.prototype.slice.call(oDivs, 0);
+    //    console.log(listAry instanceof  Array);
+
+
+    //2、filter过滤符合条件的元素，
+    // 并且返回新数组,原数组不变
+    //filter为“过滤”、“筛选”之意。指数组filter后，返回过滤后的新数组。
+    //(***** 采用非严格比较 ==
+    // jQuery: filter过滤选择器    $("div").filter(".current","tab");
+    //$('li').filter(':even').css('background-color', 'red');
+
+
+    //兼容ie
+    if (!Array.prototype.filter) {
+        Array.prototype.filter = function filter(fn, context) {
+            var ary = [];
+            if (typeof fn === "function") {
+                for (var i = 0; i < this.length; i++) {
+                    var flag = fn.call(context, this[i], i, self);
+                    flag == true ? ary.push(this[i]) : null;
+                }
+                return ary;
+            }
+            //判断传进来的第一个参数是否是数字，或者没有就返回空数组
+            if (arguments.length === 0 && typeof arguments[0] === "number") {
+                return ary;
+            }
+
+        };
+    }
+    //    var ary1 = [1, 2, 3, "4","5"];
+    //    var ary2 = ary1.filter(function (val, index, self) {
+    //        return val > 3;
+    //    });
+    //    console.log(ary1, ary2);
+
+    //3、map ---->>“映射”嘛，也就是原数组被“映射”成对应新数组。
+    // 返回新数组，原来数组不变
+    //作用：在实际使用的时候，我们可以利用map方法方便获得对象数组中的特定属性值们
+    //案例：
+    //    var school = [
+    //        {name: "珠峰培训", address: "霍营"},
+    //        {name: "智能社", address: "国贸"},
+    //        {name: "千峰教育", address: "平西府"},
+    //        {name: "妙味课堂", address: "西二旗"},
+    //    ]
+    //    var addressTotal = school.map(function (value, index, self) {
+    //        return value.address; //return 对象.属性名
+    //    })
+    //    console.log(school);
+    //    console.log(addressTotal); //["霍营", "国贸", "平西府", "西二旗"]
+
+    //兼容写法
+    if (!Array.prototype.map) {
+        Array.prototype.map = function map(fn, context) {
+            var ary = [];
+            if (typeof fn === "function") {
+                for (var i = 0; i < this.length; i++) {
+                    var val = fn.call(context, this[i], i, this);
+                    ary.push(val);
+                }
+                return ary;
+            }
+            return ary;
+        };
+    }
+    //
+    //    var ary1 = [1,3,4,5,5];
+    //    var ary2 = ary1.map(function(value,index,self) {
+    //         return value+1;
+    //    });
+    //    alert(ary1);
+    //    alert(ary2);
+
+    //4.some意指“某些”，指是否“某些项”合乎条件。
+    // 如果遇到一个满足条件，就退出循环，不在执行，最终返回true,如果一个都不满足，返回false;
+    //原来数组不变，返回布尔值
+    //思路：
+    //反方向假设法：假设每个元素都不符合，都为false,当我们进行变量数组的时候，一旦遇到不满足的立马返回true,退出循环
+
+    //    var ary1 = [1,2,3,4];
+    //    var ary2 = ary1.some(function (value,index,self) {
+    //         return value >9;
+    //    });
+    //    console.log(ary1,ary2);
+    if (!Array.prototype.some) {
+        Array.prototype.some = function some(fn, context) {
+            if (typeof fn === "function") {
+                var flag = false; //默认所有元素都不成立
+                for (var i = 0; i < this.length; i++) {
+                    var val = fn.call(context, this[i], i, this);
+                    if (val === true) {
+                        flag = true;
+                        break;
+                    }
+                }
+                return flag;
+            }
+        };
+    }
+
+    //    var ary = [1, 3, 4];
+    //    var ary1 = ary.some(function (value, index, self) {
+    //        return value > 5;
+    //    });
+    //    alert(ary);
+    //    alert(ary1);
+
+
+    //5.every [每一个]---->>跟some的基友关系已经是公开的秘密了，同样是返回Boolean值，不过，every需要每
+    // 如果遇到一个满足不条件，就退出循环，不在执行，最终返回false,如果一个都不满足，返回false;
+    //原来数组不变，返回布尔值
+
+    //    var ary1 = [1,2,3,4];
+    //    var ary2 = ary1.every(function (value,index,self) {
+    //         return value >9;
+    //    });
+    //    console.log(ary1,ary2);
+
+    //思路：
+    //反方向假设法：假设每个元素都符合，都我true,当我们进行变量数组的时候，一旦遇到不满足的立马返回false,退出循环
+    if (!Array.prototype.every) {
+        Array.prototype.every = function every(fn, context) {
+            if (typeof fn === "function") {
+                var flag = true; //默认所有元素都不成立
+                for (var i = 0; i < this.length; i++) {
+                    var val = fn.call(context, this[i], i, this);
+                    if (val === false) {
+                        flag = false;
+                        break;
+                    }
+                }
+                return flag;
+            }
+        };
+    }
+    //    var ary = [1, 3, 4,7];
+    //    var ary1 = ary.every(function (value, index, self) {
+    //        return value > 5;
+    //    });
+    //    alert(ary);
+    //    alert(ary1);
+
+    //6.indexof --->查找当前元素在数组中的位置，没有返回-1，和我们字符串中的indexOf功能一样哦！！！
+    //原来数组变量，返回一个数字
+    // ary.indexof(val[,start]);   返回整数索引值，如果没有匹配（严格匹配），返回-1. fromIndex可选，表示从这个位置开始搜索，若缺省或格式不合要求，使用默认值0
+    //严格的比较哦~~~   ===  switch case也是严格比较
+    //非严格比较——-   filter   if判断
+    //    var ary1 = [1, 2, 3, 4];
+    //    var index = ary1.indexOf(1);
+    //    console.log(index); //0
+    //    var index1 = ary1.indexOf("1");
+    //    console.log(index1); // -1
+
+    //思路： 假设没有这个元素，默认-1，找到返回相应的元素索引
+    if (!Array.prototype.indexOf) {
+        Array.prototype.indexOf = function indexOf(value) {
+            var n = -1; //假设没有这个元素
+            if (arguments.length === 1) {
+                for (var i = 0; i < this.length; i++) {
+                    if (value === this[i]) {  //非严格比较和严格比较主要是看这里哦！！！
+                        return i;
+                    }
+                }
+                return n;
+
+            }
+        }
+    }
+
+    //   升级版的，支持俩个参数，并且第二个参数可以是数字字符串哦！！形参预处理思想！！！！ （核心思想）
+    if (!Array.prototype.indexOfBig) {
+        Array.prototype.indexOfBig = function indexOfBig(value, start) {
+            var index = -1;
+            start = start * 1 || 0; //这里的用法巧妙  值得思考哦！！！！
+            for (var i = start; i < this.length; i++) {
+                if (value === this[i]) {
+                    return i;
+                }
+            }
+            return index;
+        }
+    }
+    //    var ary1 = [1, 2, 3, 4];
+    //    var index = ary1.indexOfBig(1,1);
+    //    alert(index); //0
+    //    var index1 = ary1.indexOf("1");
+    //    alert(index1); // -1
+
+
+    //7.lastIndexof --->查找当前元素在数组中的位置，没有返回-1，和我们字符串中的lastIndexOf功能一样哦！！！
+    //只是lastIndexOf是从字符串的末尾开始查找，而不是从开头。还有一个不同就是fromIndex的默认值是array.length - 1而不是0.
+    //原来数组变量，返回一个数字
+    //严格的比较哦~~~   ===  switch case也是严格比较
+    //非严格比较——-   filter   if判断
+
+    //思路： 假设没有这个元素，默认-1，找到返回相应的元素索引
+    if (!Array.prototype.lastIndexOf) {
+        Array.prototype.lastIndexOf = function lastIndexOf(value) {
+            var n = -1; //假设没有这个元素
+            if (arguments.length === 1) {
+                for (var i = this.length - 1; i > -1; i--) { //有那么一点绕！！！
+                    if (value === this[i]) {  //非严格比较和严格比较主要是看这里哦！！！
+                        return i;
+                    }
+                }
+                return n;
+
+            }
+        }
+    }
+
+    //   升级版的，支持俩个参数，并且第二个参数可以是数字字符串哦！！形参预处理思想！！！！ （核心思想）
+    if (!Array.prototype.lastIndexOfBig) {
+        Array.prototype.lastIndexOfBig = function lastIndexOfBig(value, start) {
+            var index = -1;
+            start = start * 1 || 0; //这里的用法巧妙  值得思考哦！！！！
+            for (var i = start; i > -1; i--) {
+                if (value === this[i]) {
+                    return i;
+                }
+            }
+            return index;
+        }
+    }
+    var ary1 = [1, 2, 3, 4];
+    var index = ary1.lastIndexOfBig(1);
+    //alert(index); //0
+    var index1 = ary1.lastIndexOfBig("1");
+    // alert(index1); // -1
+
+    //自己思考，第二个参数为负数时候，是总长度加上负数，在进行位置查找
+
+
+</script>
+</body>
+</html>
