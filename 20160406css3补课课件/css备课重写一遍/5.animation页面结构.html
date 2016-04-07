@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .box{
+            margin: 20px auto;
+            width: 120px;
+            height: 300px;
+            background: url(images/tb1.png) no-repeat;
+            animation:move 1s ease-in infinite  forwards;
+            transform-origin:top;
+        }
+            /*animation动画分为两步
+            1.申明关键帧动画   @keyframes
+            2.通过animation调用申明的关键帧
+
+            */
+        @keyframes move {
+            0%,100%{
+                transform:rotate(45deg);
+            }
+            50%{
+                transform: rotate(-45deg);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="box"></div>
+</body>
+</html>

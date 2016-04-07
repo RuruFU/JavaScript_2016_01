@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        .stage{
+            width: 367px;
+            height: 297px;
+            background: url(images/bg-grid.jpg) no-repeat;
+            position:relative;
+            transform-style: preserve-3d;
+        }
+        .stage img{
+            width: 142px;
+            height: 200px;
+            position: absolute;
+            left:50%;
+            top:50%;
+            margin: -100px 0 0 -71px;
+        }
+        /*这张图片是用来对比的*/
+        .stage img:nth-child(1){
+            opacity: 0.5;
+        }
+        .stage img:nth-child(2){
+            transform: rotateY(40deg);
+
+            /*
+            第一个参数:正的值往左倾斜,负的值往右倾斜
+            第二个参数:正的值往下倾斜,负的值往上倾斜
+
+
+            2D变形
+            所有的变形都是通过transform来设置的
+            transform：rotate(45deg) 旋转
+            transform：skew
+            */
+
+
+        }
+    </style>
+</head>
+<body>
+<div class="stage">
+    <img src="images/pic.jpg">
+    <img src="images/pic.jpg">
+</div>
+</body>
+</html>
