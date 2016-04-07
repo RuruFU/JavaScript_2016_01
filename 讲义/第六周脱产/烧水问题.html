@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+</body>
+</html>
+<script type="text/javascript">
+    //面向对象
+    function EventEitter() { //事件发射器类
+
+    }
+
+    //订阅---->>把方法放到事件池里面
+    EventEitter.prototype.on = function (type, fn) {
+        //on方法的工作就是： 把fn登记在以type为区分符的一张清单(数组);
+        if (!this["emitter" + type]) {    //判断是否有， 没有创建
+            this["emitter" + type] = [];
+        }
+
+
+        //判断方法是否以前绑定过了，没有绑定则放到数组里面---->>解决不重复绑定问题
+        var ary = this["emitter" + type];
+        for (var i = 0; i < ary.length; i++) {
+            if (ary[i] === fn) {
+                return;
+            }
+        }
+        ary.push(fn);
+
+    };
+
+
+    //发布，通知， ---->>>依次执行方法
+    EventEitter.prototype.run = function (type) {
+        var ary = this["emitter" + type];  //讲方法拿过来
+        if (ary && ary.length) {
+            for (var i = 0; i < ary.length; i++) {
+                if (typeof ary[i] === "function") { //如果是方法就执行，不是的话删除
+                    ary[i].call(this); //call可以去掉， 作用，遍历执行
+                } else {
+                    ary.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+
+    };
+
+
+    //删除方法
+    EventEitter.prototype.off = function (type, fn) {
+        var ary = this["emitter" + type]; //获取元素
+        if (ary && ary.length) {
+            for (var i = 0; i < ary.length; i++) {
+                if (ary[i] === fn) {
+                    // ary.splice(i, 1); 数组塌陷问题
+                    ary[i] = null;
+                }
+            }
+
+        }
+    };
+
+
+    function Pot() {  //水壶
+
+    }
+    Pot.prototype = new EventEitter;   //继承  缺点：  给pot.prototype加方法，给谁加了？
+    Pot.prototype.__proto__ = EventEitter.prototype; // node.JS使用    能继承私有的吗？
+    Pot.prototype.boiling = function boiling() {
+        var _this = this;
+        window.setTimeout(function () {
+            console.log("水烧开啦！！！");
+           // run.call(_this, "boiling");    全局方法里面没有定义run,报错          //发布，执行别的方法   //this----window方法
+            _this.run("boiling");
+        }, 5000);
+            //异步的，必须处理 this问题
+        //报警器： ---->>回调函数
+    };
+    var pot1 = new Pot();
+    pot1.boiling();
+
+    //烧水
+    function noodles() {
+        console.log("泡方便面");
+    }
+
+    function shower() {
+        console.log("洗澡");
+    }
+    pot1.on("boiling", noodles);
+    pot1.on("boiling", shower);
+
+
+    //ary.length问题，一进来是否定好了??
+    var ary = [1, 2, 3];
+    for (var i = 0; i < ary.length; i++) {
+        console.log(ary[i]);
+        ary.push(1);
+    }
+</script>
