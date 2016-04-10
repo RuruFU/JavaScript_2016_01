@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>无标题文档</title>
+    <style type="text/css">
+        #div1{ width:100px; height:100px; position:absolute; top:100px; left:100px; background:red; cursor:move; -webkit-user-select:none;}
+    </style>
+</head>
+
+<body>
+<div id="div1">
+
+</div>
+</body>
+</html>
+<script src="event.js"></script>
+<script>
+
+
+
+
+
+
+
+
+    function clearEffect(){
+        clearTimeout(this.flyTimer);
+        clearTimeout(this.dropTimer);
+    }
+
+    function getSpeed(e){
+        if(this.prevPosi){
+            this.speed=e.pageX-this.prevPosi;
+            this.prevPosi=e.pageX;
+        }else{
+            this.prevPosi=e.pageX;
+        }
+    }
+
+
+    function fly(){
+        this.flySpeed*=.98;//this是类的实例，
+        var current=this.ele.offsetLeft+this.flySpeed;
+        var r=(document.documentElement.clientWidth||document.body.clientWidth)-this.ele.offsetWidth;//盒子运动能到达的最右边
+        if(current>=r){
+            this.ele.style.left=r+"px";
+            this.flySpeed*=-1;
+        }if(current<=0){
+            this.ele.style.left=0;
+            this.flySpeed*=-1;
+
+        }else{
+            this.ele.style.left=current+"px";
+        }
+
+        if(Math.abs(this.flySpeed)>=0.5){
+            this.flyTimer=window.setTimeout(processThis(fly,this),20);
+        }
+
+    }
+
+    function drop(){
+        if(this.dropSpeed){
+            this.dropSpeed+=9;
+        }else{
+            this.dropSpeed=9;
+        }
+        this.dropSpeed*=.98;
+        var bottom=(document.documentElement.clientHeigh||document.body.clientHeight)-this.offsetHeight;//运动能到达的最下边
+        var current=this.dropSpeed+this.ele.offsetTop;//当前运动到达的位置
+        if(current>bottom){
+            this.ele.style.top=bottom+"px";
+            this.dropSpeed*=-1;//调头
+            this.flag++;
+        }else{
+            this.ele.style.top=current+"px";
+            this.flag=0;
+        }
+        if(this.flag<2){
+            this.dropTimer=window.setTimeout(processThis(drop,this),20);
+        }
+
+    }
+
+
+
+
+</script>
