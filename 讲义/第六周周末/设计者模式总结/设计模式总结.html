@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>设计模式总结</title>
+    <style type="text/css">
+        ul {
+            list-style: none;
+            width: 480px;
+            height: 640px;
+            margin: 0 auto;
+            position: relative;
+            background: #6F6;
+            padding: 5px;
+        }
+
+        ul li {
+            width: 150px;
+            height: 150px;
+            float: left;
+            overflow: hidden;
+            margin: 5px;
+            cursor: move;
+            background: lawngreen;
+        }
+
+        ul li img {
+            border: none
+        }
+
+        div {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            left: 100px;
+            top: 100px;
+            text-align: center;
+            line-height: 100px;
+            font-size: 100px;
+            cursor: move;
+            -webkit-user-select: none;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div id="div1">☺</div>
+<ul id="photoList">
+    <li><img src="img/1.png" alt="" width="150" height="150"></li>
+    <li><img src="img/2.png" alt="" width="150" height="150"></li>
+    <li><img src="img/3.png" alt="" width="150" height="150"></li>
+    <li><img src="img/4.png" alt="" width="150" height="150"></li>
+    <li><img src="img/5.png" alt="" width="150" height="150"></li>
+    <li><img src="img/6.png" alt="" width="150" height="150"></li>
+    <li><img src="img/7.png" alt="" width="150" height="150"></li>
+    <li><img src="img/8.png" alt="" width="150" height="150"></li>
+    <li><img src="img/9.png" alt="" width="150" height="150"></li>
+    <li><img src="img/10.png" alt="" width="150" height="150"></li>
+    <li><img src="img/11.png" alt="" width="150" height="150"></li>
+    <li><img src="img/12.png" alt="" width="150" height="150"></li>
+</ul>
+<script src="tween.js"></script>
+<!--设计模式有两种思路：1、面向过程。2、面向对象-->
+<!--1、面向过程的拖拽特效和照片墙-->
+<script>
+    //1) event事件库
+    function processThis(fn, obj) {//改变方法中this的方法。这里将fn中的this指向obj
+        return function (e) {
+            fn.call(obj, e);
+        };
+    }
+    function on(ele, type, fn) {
+        //自定义事件类型。规定自定义属性数组名称以 self 开头 74-84
+        if (/^self/.test(type)) {//如果已self开头，则为自定义事件
+            if (!ele["self" + type]) {
+                ele["self" + type] = [];
+            }
+            var aSelf = ele["self" + type];
+            for (var j = 0; j < aSelf.length; j++) {//遍历数组，防止重复绑定
+                if (aSelf[j] == fn)return
+            }
+            aSelf.push(fn);//如果ele的自定义事件数组上没有fn，则push到这个数组中
+            return;//如果是自定义事件，则返回，不执行下边的代码
+        }
+        //系统事件类型
+        if (ele.addEventListener) {//如果支持addEventListener，直接用这个方法，不执行这个if以外的代码
+            ele.addEventListener(type, fn);
+            return;
+        }
+        //如果不支持addEventListener方法，则如下
+        if (!ele["aEvent" + type]) {
+            ele["aEvent" + type] = [];
+            ele.attachEvent("on" + type, processThis(run, ele));//不支持addEventListener的时候，即ie浏览器，用ele.attachEvent方法绑定事件，并在事件类型前加 on
+        }
+        var a = ele["aEvent" + type];
+        for (var i = 0; i < a.length; i++) {//遍历数组，防止重复绑定
+            if (a[i] == fn)return;
+        }
+        a.push(fn);
+    }
+    function selfRun(type, e) {//自定义事件的run方法。和系统事件的run方法相同
+        var a = this["self" + type];
+        if (a) {
+            for (var i = 0; i < a.length; i++) {
+                if (typeof a[i] == "function") {//判断fn是不是方法，如果是方法，则运行，不是方法，即为null，是在off中设置为null的。不是方法删除这一项
+                    a[i].call(this, e);//这里要改变fn方法中的this关键字
+                } else {
+                    a.splice(i, 1);
+                    i--;//解决数组塌陷的问题
+                }
+            }
+        }
+    }
+    function run(e) {
+        e = window.event;
+        var type = e.type;
+        if (!e.target) {//处理事件对象的兼容性问题
+            e.pageX = e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
+            e.pageY = e.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
+            e.preventDefault = function () {
+                e.returnValue = false
+            };
+            e.stopPropagation = function () {
+                e.cancelBubble = true
+            };
+        }
+        var a = this["aEvent" + type];
+        if (a) {
+            for (var i = 0; i < a.length; i++) {//这个for中的代码在selfRun中解释
+                if (typeof a[i] == "function") {
+                    a[i].call(this, e);
+                } else {
+                    a.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+    }
+    function off(ele, type, fn) {
+        //自定义事件类型。规定名称以 self 开头
+        if (/^self/.test(type)) {
+            var aSelf = ele["self" + type];
+            if (aSelf) {
+                for (var j = 0; j < aSelf.length; j++) {
+                    if (aSelf[j] == fn) {//如果数组中的某一项等于fn，则置为null
+                        aSelf[j] = null;
+                        return;//因为数组中没有重复项，所以写return
+                    }
+                }
+            }
+        }
+        //系统事件类型
+        if (ele.removeEventListener) {//标准浏览器支持这个方法。如果支持则用这个方法，不再执行下边的代码
+            ele.removeEventListener(type, fn);
+            return;
+        }
+        var a = ele["aEvent" + type];
+        if (a) {
+            for (var i = 0; i < a.length; i++) {
+                if (a[i] == fn) {
+                    a[i] = null;
+                    return;
+                }
+            }
+        }
+    }
+    //2)drag事件库
+    function down(e) {
+        this.x = this.offsetLeft;
+        this.y = this.offsetTop;
+        this.mx = e.pageX;
+        this.my = e.pageY;
+        if (this.setCapture) {//这个方法是出谷歌以外专门解决失去拖动太快失去焦点的问题的
+            this.setCapture();
+            on(this, "mousemove", move);
+            on(this, "mouseup", up);
+        } else {//这是在谷歌浏览器下，所以可以用bind，不存在兼容问题。在谷歌浏览器下，没有setCapture。为防止鼠标焦点丢失，将焦点绑在document上，document焦点不会丢失
+            this.MOVE = move.bind(this);
+            this.UP = up.bind(this);
+            on(document, "mousemove", this.MOVE);//on方法：on(ele,type,fn);fn是指向ele的，所以这里的方法是指向document的。所以要将this的指向改变，改为指向盒子也就是这个方法中的this
+            on(document, "mouseup", this.UP);
+        }
+        e.preventDefault();//去掉默认事件，在run方法中已经将所有事件对象的兼容问题解决好了
+        selfRun.call(this, "selfdragstart", e);//发布自定义事件。注意改变this的指向。这个自定义事件selfdragstart发布以后，可以在后续代码中绑定这个自定义事件的处理方法，如259行。事件类型名称也是在这里定义的
+    }
+    function move(e) {
+        this.style.left = this.x + e.pageX - this.mx + "px";
+        this.style.top = this.y + e.pageY - this.my + "px";
+        selfRun.call(this, "selfdraging", e);//发布自定义事件
+    }
+    function up(e) {
+        if (this.releaseCapture) {//与setCapture对应
+            this.releaseCapture();
+            off(this, "mousemove", move);
+            off(this, "mouseup", up);
+        } else {
+            off(document, "mousemove", this.MOVE);
+            off(document, "mouseup", this.UP);
+        }
+        selfRun.call(this, "selfdragend", e);
+    }
+    function clearEffect(e) {
+        clearTimeout(this.flyTimer);
+        clearTimeout(this.dropTimer);
+    }
+    function getSpeed(e) {
+        if (this.prev) {
+            this.flySpeed = e.pageX - this.prev;
+            this.prev = e.pageX;
+        } else {
+            this.prev = e.pageX;
+        }
+    }
+    function fly(e) {
+        this.flySpeed *= 0.97;
+        var x = this.offsetLeft + this.flySpeed;
+        var maxR = (document.documentElement.clientWidth || document.body.clientWidth) - this.offsetWidth;
+        if (x <= 0) {
+            this.style.left = 0;
+            this.flySpeed *= -1;
+        } else if (x >= maxR) {
+            this.style.left = maxR + "px";
+            this.flySpeed *= -1;
+        } else {
+            this.style.left = x + "px";
+        }
+        if (Math.abs(this.flySpeed) > 0.5) {//速度会一直衰减，但是当速度变为0.5以下的时候，即定时器每次移动的距离小于0.5，可以看做没有移动。所以当速度小于0.5的时候不再调用定时器
+            this.flyTimer = window.setTimeout(processThis(fly, this), 30);//定时器中的this指向window，但是fly调用的时候this要指向被拖拽的元素，因为fly中的this就是被拖拽的元素，所以这里要用processThis(fly, this)将下次调用fly的时候this指向被拖拽的元素
+        }
+    }
+    function drop(e) {
+        if (this.dropSpeed) {
+            this.dropSpeed += 9.8;
+        } else {
+            this.dropSpeed = 9.8;
+        }
+        this.dropSpeed *= 0.97;
+        var y = this.offsetTop + this.dropSpeed;
+        var maxB = (document.documentElement.clientHeight || document.body.clientHeight) - this.offsetHeight;
+        if (y <= 0) {//上边界，这个if判断上课没有。可以不写
+            this.style.top = 0;
+            this.dropSpeed *= -1;
+            this.flag++;
+        } else if (y >= maxB) {//下边界
+            this.style.top = maxB + "px";
+            this.dropSpeed *= -1;
+            this.flag++;
+        } else {
+            this.style.top = y + "px";
+            this.flag = 0;
+        }
+        if (this.flag < 2) {//当盒子移动到下边界速度变为0并下边界停留的时候，this.flag会一直加，即会一直执行247行，this.flag的值会大于2。也就是说，当this.flag大于等于2的时候，盒子相当于在下边界停止，可以不再调用定时器
+            this.dropTimer = window.setTimeout(processThis(drop, this), 30);
+        }
+    }
+    //3)拖拽代码：
+    var div = document.getElementById("div1");
+    on(div, "mousedown", down);//绑定系统事件。系统事件和自定义事件的区分：看事件类型名称，像mousedown、click、mousemove等系统已经规定好的事件类型名称为系统事件，我们自己命名的事件类型名称的为自定义事件，自己命名事件类型名称的时候注意要避免和系统事件类型名称冲突，可以加一些特殊的前缀，这里加的self。
+    on(div, "selfdragstart", clearEffect);//绑定自定义事件。注意这里自定义事件类型的名称不是在这命名的，是在184行执行selfRun方法的时候命名的。selfdragstart是在down方法最后执行的，如果要在down方法中再添加其它方法，事件类型写selfdragstart即可
+    on(div, "selfdraging", getSpeed);//selfdraging是在move方法的最后，selfRun方法执行的时候命名的，也就是说这个getSpeed会在move方法的最后执行
+    on(div, "selfdragend", fly);//selfdragend是在up方法的最后，selfRun方法执行的时候命名的。同理，fly会在up方法的最后执行
+    on(div, "selfdragend", drop);
+    //4)照片墙代码：
+    /*步骤： 假设拖拽的元素为 A
+     1、将所有的li改为绝对定位。
+     2、检测A和哪些元素碰撞，找到和A最近的元素交换位置
+     */
+    var eles = document.getElementsByTagName("li");
+    for (var i = eles.length - 1; i >= 0; i--) {//注意是从后往前遍历改变元素为绝对定位。如果是从前向后，当第一个元素改变为绝对定位的时候，会脱离标准流，对第二个元素会有影响，即第二个元素会移动到第一个元素的位置
+        var ele = eles[i];
+        ele.l = ele.offsetLeft;//为元素添加自定义属性l保存元素起始位置的offsetLeft。以便下边交换位置的时候使用
+        ele.t = ele.offsetTop;//为元素添加自定义属性t保存元素起始位置的offsetTop。以便下边交换位置的时候使用
+        ele.style.left = ele.offsetLeft + "px";
+        ele.style.top = ele.offsetTop + "px";
+        ele.style.position = "absolute";//注意要先改变top和left值，再将position设置为absolute，原因269行从后往前遍历类似
+        ele.style.margin=0;
+        on(ele,"mousedown",down);
+        on(ele,"selfdragstart",increaseZIndex);
+        on(ele,"selfdraging",saveHitEle);
+        on(ele,"selfdragend",changePosition);
+        on(ele,"selfdragend",resetBackground);
+    }
+    //每一次点击，都让点击的元素在最前端。并将颜色设置为红色
+    var zIndex=0;
+    function increaseZIndex(){
+        this.style.zIndex=++zIndex;
+        this.style.background="red";
+    }
+    /**
+     * 检测r是否和b相撞
+     * @param r 被拖拽的元素
+     * @param b 被撞的元素
+     * @returns {boolean}  撞了返回true。没撞返回false
+     */
+    function isHit(r, b) {
+        if((r.offsetLeft+ r.offsetWidth< b.offsetLeft)|| (r.offsetTop+ b.offsetHeight< b.offsetTop)|| (r.offsetLeft> b.offsetLeft+ b.offsetWidth)|| (r.offsetTop> b.offsetTop+ b.offsetHeight)){//判断是否没有撞到。用左上右下四个方向判断
+            return false;//这句话是为了305行saveHitEle将被撞的元素保存而写。
+        } else {
+            return true;
+        }
+    }
+    /**
+     * 保存被撞的元素
+     */
+    function saveHitEle() {//这个方法里的this是指被拖动的元素
+        this.hit= [];//在拖动的元素上即this上自定义属性hit，是一个数组，保存被撞的元素集合
+        for (var i = 0; i < eles.length; i++) {//遍历所有的li，即eles集合，判断是否和this相撞
+            if (eles[i] == this)continue;//如果eles的这一项是this，则不进行判断，continue终止此次循环，进行下一次循环，这里即不执行309到313行代码，执行i++，进行下一次循环
+            eles[i].style.background = "";//在检测之前把原来可能被染成黄背景的元素的背景恢复
+            if (isHit(this, eles[i])) {//判断是否相撞，isHit方法中会返回true和false，如果和this相撞会返回true，即这个if成立，执行if里的语句
+                eles[i].style.background = "gold";//将被撞的元素背景设置为gold
+                this.hit.push(eles[i]);//如果相撞，则将被撞的元素push到this的自定义属性hit数组中
+            }
+        }
+    }
+    /**
+     * 交换位置：1、先取的最小位置对应的元素。2、将此元素与拖拽的元素交换位置。3、重新初始化元素的自定义属性l和t的值
+     */
+    function changePosition() {
+        var a = this.hit;//获得this自定义属性hit数组
+        if (a && a.length) {
+            var min=null;
+            var minEle=null;
+            for (var i = 0; i < a.length; i++) {//找出距离最短的元素。假定数组中第一个为最短距离的元素，然后依次跟数组中的每一项比较，如果遇到比这一个小的元素，则交换。这样求出最小值和最小值对应的元素
+                var li=a[i];
+                if(!minEle){
+                    min=Math.sqrt(Math.pow(this.offsetLeft-li.offsetLeft,2)+Math.pow(this.offsetTop-li.offsetTop,2));
+                    minEle=a[i];
+                }
+                var distance= min=Math.sqrt(Math.pow(this.offsetLeft-li.offsetLeft,2)+Math.pow(this.offsetTop-li.offsetTop,2));
+                if(min>distance){
+                    min=distance;
+                    minEle=a[i];
+                }
+            }
+            //交换位置
+            animate(minEle,{left:this.l,top:this.t},500,3);
+            animate(this,{left:minEle.l,top:minEle.t},500,3);
+            //重新设置l和t自定义属性
+            var lTemp=this.l;
+            this.l=minEle.l;
+            minEle.l=lTemp;
+            var tTemp=this.t;
+            this.t=minEle.t;
+            minEle.t=tTemp;
+            this.hit=null;
+        } else {//没有碰撞元素。即超出ul，让它回原来的位置
+            animate(this,{left:this.l,top:this.t},500,3);
+        }
+    }
+    /**
+     * 照片墙操作结束以后，颜色初始化
+     */
+    function resetBackground(){
+        for(var i=0;i<eles.length;i++){
+            eles[i].style.background="";
+        }
+    }
+</script>
+<!--2、面向对象的拖拽特效和照片墙-->
+<script>
+    /*
+        将down，move，up方法写在Drag类上。
+       将自定义事件的on和run即selfOn和selfRun写在EventEmitter类上。
+       让Drag类继承EventEmitter类。
+       所以实例上就可以找到down，move，up，on，run，off这些方法，当需要的时候调用实例上的这些方法。
+       注意每一个方法中的this指向，在EventEmitter和Drag类上定义的方法，this都指向实例
+     */
+    //1) event事件库
+    function processThis(fn, obj) {//改变方法中this的方法。这里将fn中的this指向obj
+        return function (e) {
+            fn.call(obj, e)
+        };
+    }
+    function on(ele, type, fn) {
+        //系统事件类型
+        if (ele.addEventListener) {
+            ele.addEventListener(type, fn);
+            return;
+        }
+        //如果不支持addEventListener方法，则如下
+        if (!ele["aEvent" + type]) {
+            ele["aEvent" + type] = [];
+            ele.attachEvent("on" + type, processThis(run, ele));
+        }
+        var a = ele["aEvent" + type];
+        for (var i = 0; i < a.length; i++) {
+            if (a[i] == fn)return;
+        }
+        a.push(fn);
+    }
+    function run(e) {
+        e = window.event;
+        var type = e.type;
+        if (!e.target) {
+            e.pageX = e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
+            e.pageY = e.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
+            e.preventDefault = function () {
+                e.returnValue = false
+            };
+            e.stopPropagation = function () {
+                e.cancelBubble = true
+            };
+        }
+        var a = this["aEvent" + type];
+        if (a) {
+            for (var i = 0; i < a.length; i++) {
+                if (typeof a[i] == "function") {
+                    a[i].call(this, e);
+                } else {
+                    a.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+    }
+    function off(ele, type, fn) {
+        //自定义事件类型。规定名称以 self 开头
+        if (/^self/.test(type)) {
+            var aSelf = ele["self" + type];
+            if (aSelf) {
+                for (var j = 0; j < aSelf.length; j++) {
+                    if (aSelf[j] == fn) {
+                        aSelf[j] = null;
+                        return;
+                    }
+                }
+            }
+        }
+        //系统事件类型
+        if (ele.removeEventListener) {
+            ele.removeEventListener(type, fn);
+            return
+        }
+        var a = ele["aEvent" + type];
+        if (a) {
+            for (var i = 0; i < a.length; i++) {
+                if (a[i] == fn) {
+                    a[i] = null;
+                    return;
+                }
+            }
+        }
+    }
+    //2)EventEmitter类
+    function EventEmitter(){}
+    EventEmitter.prototype.selfOn=function(type,fn){//这里的this指向实例。
+        if(!this["self"+type]){this["self"+type]=[];}
+        var a=this["self"+type];
+        for(var i=0;i< a.length;i++){
+            if(a[i]==fn)return;
+        }
+        a.push(fn);
+        return this;//这里return this是为了照片墙的链式写法
+    };
+    EventEmitter.prototype.selfRun=function(type,e){//这里的this指向实例。
+        var a=this["self"+type];
+        if(a){
+            for(var i=0;i< a.length;i++){
+                if(typeof a[i]=="function"){
+                    a[i].call(this,e);
+                }else{
+                    a.splice(i,1);
+                    i--;
+                }
+            }
+        }
+    };
+    EventEmitter.prototype.off=function(type,fn){//这里的this指向实例。
+        var a=this["self"+type];
+        if(a){
+            for(var i=0;i< a.length;i++){
+                if(a[i]==fn){
+                    a[i]=null;
+                    return;
+                }
+            }
+        }
+    };
+    //3)Drag类
+    function Drag(ele) {//这里的this只实例，this.ele指被拖拽的元素。没new Drag一次都会创建一个实例。new Drag的时候需要将要拖拽的对象传进来，即Drag方法中的形参ele，也就是说每一个实例对应一个被拖拽的元素，所以将x、y、mx、my等属性定义在实例上和定义在被拖拽的元素上效果是相同的。 面向过程是将x、y、mx、my等属性定义在被拖拽的元素上。 这里的this是实例，this.ele是被拖拽的元素。如果用x、y、mx、my等属性的时候，首先要确定x、y、mx、my等属性是定义在实例(this)上还是定义在被拖拽的元素(this.ele)上。  这个方法的this功能主要是查找需要的内容的作用，即要用被拖拽元素的时候写this.ele。要用x的时候写this.x
+        this.ele = ele;//ele为Drag方法的形参，这个形参保存了被拖拽的元素。这里将实例的ele属性即this.ele指向了被拖拽的元素。以便下边代码使用实例this找到被拖拽的元素ele
+        this.x = null;//将x、y、mx、my等属性放在实例的自定义属性上。
+        this.y = null;
+        this.mx = null;
+        this.my = null;
+        this.DOWN=processThis(this.down,this);
+        this.MOVE=processThis(this.move,this);
+        this.UP=processThis(this.up,this);
+        on(this.ele,"mousedown",this.DOWN);//使用on方法绑定的时候，第一个形参是被拖拽的对象，所以此处第一个实参是this.ele，on的第三个形参是方法名，这里将改变down方法this指向的自定义属性（即this.DOWN）定义在了实例this上，所以此处第三个实参是this.DOWN。
+    }
+    //4)Drag继承EventEmitter类
+    Drag.prototype=new EventEmitter;
+    Drag.prototype.down = function (e) {//这个方法中的this指实例，this.ele指被拖拽的元素。原因在481行已经说明。Drag类方法上所有的this都指向实例，this.ele都指向被拖拽的元素，在Drag类初始化的时候定义的
+        this.x=this.ele.offsetLeft;
+        this.y=this.ele.offsetTop;
+        this.mx= e.pageX;
+        this.my= e.pageY;
+        if(this.ele.setCapture){
+            this.ele.setCapture();
+            on(this.ele,"mousemove",this.MOVE);
+            on(this.ele,"mouseup",this.UP);
+        }else{
+            on(document,"mousemove",this.MOVE);
+            on(document,"mouseup",this.UP);
+        }
+        e.preventDefault();
+        this.selfRun("selfdragstart",e);//this.selfRun即EventEmitter方法上的selfRun方法，通过原型链的方式查找到这个方法的。
+    };
+    Drag.prototype.move = function (e) {
+        this.ele.style.left= this.x+ e.pageX-this.mx+"px";
+        this.ele.style.top=this.y+ e.pageY-this.my+"px";
+        this.selfRun("selfdraging",e);
+    };
+    Drag.prototype.up = function (e) {
+        if(this.ele.releaseCapture){
+            this.ele.releaseCapture();
+            off(this.ele,"mousemove",this.MOVE);
+            off(this.ele,"mouseup",this.UP);
+        }else{
+            off(document,"mousemove",this.MOVE);
+            off(document,"mouseup",this.UP);
+        }
+        this.selfRun("selfdragend",e);
+    };
+    //6)特效代码
+    function clearEffect(){//clearEffect方法中的this指向实例，是为了配合Drag类中的方法，要和Drag类中方法的this指向相同。clearEffect法是在Drag方法中的down方法中运行的，clearEffect方法运行的步骤：1、在down方法中 this.selfRun，此时selfRun中的this是指down方法中的this，down方法中的this是指实例，即selfRun中的this指向实例。2、在selfRun方法中 a[i].call(this,e); 将clearEffect这个方法中的this指向selfRun方法中的this，第一步说明self方法中的this是实例，所以此时clearEffect中的this也是实例。  这里将flyTimer、dropTimer自定义属性放在了实例上
+        clearTimeout(this.flyTimer);
+        clearTimeout(this.dropTimer);
+    }
+    function getSpeed(e){
+        if(this.prev){
+            this.flySpeed= e.pageX-this.prev;
+            this.prev= e.pageX;
+        }else{
+            this.prev= e.pageX;
+        }
+    }
+    function fly(){//527行说明fly方法中的this是实例。所以要使用被拖拽对象的时候要写this.ele
+        this.flySpeed*=0.97;
+        var x=this.ele.offsetLeft+this.flySpeed;
+        var maxR=(document.documentElement.clientWidth||document.body.clientWidth)-this.ele.offsetWidth;
+        if(x<=0){
+            this.ele.style.left=0;
+            this.flySpeed*=-1;
+        }else if(x>=maxR){
+            this.ele.style.left=maxR+"px";
+            this.flySpeed*=-1;
+        }else{
+            this.ele.style.left=x+"px";
+        }
+        if(Math.abs(this.flySpeed)>=0.5){
+            this.flyTimer=window.setTimeout(processThis(fly,this),20);
+        }
+    }
+    function drop(){//同理
+        if(this.dropSpeed){
+            this.dropSpeed+=9.8;
+        }else{
+            this.dropSpeed=9.8;
+        }
+        this.dropSpeed*=0.98;
+        var y=this.ele.offsetTop+this.dropSpeed;
+        var maxB=(document.documentElement.clientHeight||document.body.clientHeight)-this.ele.offsetHeight;
+        if(y>=maxB){
+            this.ele.style.top=maxB+"px";
+            this.dropSpeed*=-1;
+            this.flag++;
+        }else{
+            this.ele.style.top=y+"px";
+            this.flag=0;
+        }
+        if(this.flag<=2){
+            this.dropTimer=window.setTimeout(processThis(drop,this),20);
+        }
+    }
+    //5)拖拽模块代码
+    var div=document.getElementById("div1");
+    var drag1=new Drag(div);
+    drag1.selfOn("selfdragstart",clearEffect);
+    drag1.selfOn("selfdraging",getSpeed);
+    drag1.selfOn("selfdragend",fly);
+    drag1.selfOn("selfdragend",drop);
+    //6)照片墙模块代码
+    var eles = document.getElementsByTagName("li");
+    for (var i = eles.length - 1; i >= 0; i--) {
+        var ele = eles[i];
+        ele.l = ele.offsetLeft;
+        ele.t = ele.offsetTop;
+        ele.style.left = ele.offsetLeft + "px";
+        ele.style.top = ele.offsetTop + "px";
+        ele.style.position = "absolute";
+        ele.style.margin=0;
+        new Drag(ele).selfOn("selfdragstart",increaseZIndex).selfOn("selfdraging",saveHitEle).selfOn("selfdragend",changePosition).selfOn("selfdragend",resetBackground);//因为selfOn方法中会返回this，上边已经说明，所以这里可以写链式写法
+    }
+    var zIndex=0;
+    function increaseZIndex(){
+        this.ele.style.zIndex=++zIndex;
+        this.ele.style.background="red";
+    }
+    function isHit(r, b) {
+        if((r.offsetLeft+ r.offsetWidth< b.offsetLeft)|| (r.offsetTop+ b.offsetHeight< b.offsetTop)|| (r.offsetLeft> b.offsetLeft+ b.offsetWidth)|| (r.offsetTop> b.offsetTop+ b.offsetHeight)){
+            return false;
+        } else {
+            return true;
+        }
+    }
+    function saveHitEle() {
+        this.hit= [];
+        for (var i = 0; i < eles.length; i++) {
+            if (eles[i] == this.ele)continue;
+            eles[i].style.background = "";
+            if (isHit(this.ele, eles[i])) {
+                eles[i].style.background = "gold";
+                this.hit.push(eles[i]);
+            }
+        }
+    }
+    function changePosition() {
+        var a = this.hit;
+        if (a && a.length) {
+            var min=null;
+            var minEle=null;
+            for (var i = 0; i < a.length; i++) {
+                var li=a[i];
+                if(!minEle){
+                    min=Math.sqrt(Math.pow(this.ele.offsetLeft-li.offsetLeft,2)+Math.pow(this.ele.offsetTop-li.offsetTop,2));
+                    minEle=a[i];
+                }
+                var distance= min=Math.sqrt(Math.pow(this.ele.offsetLeft-li.offsetLeft,2)+Math.pow(this.ele.offsetTop-li.offsetTop,2));
+                if(min>distance){
+                    min=distance;
+                    minEle=a[i];
+                }
+            }
+            animate(minEle,{left:this.ele.l,top:this.ele.t},500,3);
+            animate(this.ele,{left:minEle.l,top:minEle.t},500,3);
+            var lTemp=this.ele.l;
+            this.ele.l=minEle.l;
+            minEle.l=lTemp;
+            var tTemp=this.ele.t;
+            this.ele.t=minEle.t;
+            minEle.t=tTemp;
+            this.hit=null;
+        } else {
+            animate(this.ele,{left:this.ele.l,top:this.ele.t},500,3);
+        }
+    }
+    function resetBackground(){
+        for(var i=0;i<eles.length;i++){
+            eles[i].style.background="";
+        }
+    }
+</script>
+<!--模块模式的拖拽-->
+<script>
+    /*
+    * 有点是不必在要拖拽的元素上定义自定义属性，防止冲突。即将每一个功能的代码作为一个模块，模块与模块之间是相互独立的，不会发生冲突。为了让模块与外界进行交互，所以写一个return。
+    */
+    var MODULE=(function () {
+        var x=null;
+        var y=null;
+        var mx=null;
+        var my=null;
+        var MOVE=null;
+        var UP=null;
+        function down(e) {
+            x=this.offsetLeft;
+            y=this.offsetTop;
+            mx= e.pageX;
+            my= e.pageY;
+            if(this.setCapture){
+                this.setCapture();
+                on(this,"mousemove",move);
+                on(this,"mouseup",up);
+            }else{
+                MOVE=move.bind(this);
+                UP=up.bind(this);
+                on(document,"mousemove",MOVE);
+                on(document,"mouseup",UP);
+            }
+            e.preventDefault();
+        }
+        function move(e) {
+            this.style.left=x+ e.pageX-mx+"px";
+            this.style.top=y+ e.pageY-my+"px";
+        }
+        function up(e) {
+            if(this.releaseCapture){
+                this.releaseCapture();
+                off(this,"mousemove",move);
+                off(this,"mouseup",up);
+            }else{
+                off(document,"mousemove",MOVE);
+                off(document,"mouseup",UP);
+            }
+        }
+        function init(ele){
+            on(ele,"mousedown",down);
+        }
+        return {init:init,down:down,move:move,up:up};/*把所有的方法都返回出去*/
+    })();
+    MODULE.init(div1);
+</script>
+</body>
+</html>
