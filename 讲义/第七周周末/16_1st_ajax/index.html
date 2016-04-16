@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        // 当你实现任何一个功能之前，首先要考虑的是什么？
+        // 答：兼容性
+        /**
+         * 处理兼容性有两种方式？
+         * 1、优雅降级 优先保证最新的浏览器可以使用，而那些老旧的浏览器能实现则实现，不能实现也没有办法了
+         * 2、渐进增强 先保证最老的浏览器可以用，在最新的浏览器中可以增强效果
+         */
+        /**
+         * ie7+ 实现的不是很完整，所以ie10以下一般不用这个
+         * chrome firefox safari opera
+         * ECMAScript规范
+         * @type {XMLHttpRequest}
+         */
+        var xhr = new XMLHttpRequest();
+        /**
+         * 在ie10-中使用
+         * @type {ActiveXObject}
+         */
+        var ieXHR = new ActiveXObject('Microsoft.XMLHTTP');
+        var erge = new ActiveXObject("Msxml2.XMLHTTP");
+        var sange = new ActiveXObject("Msxml3.XMLHTTP");
+
+
+        var getXHR = function () {
+            if (window.XMLHttpRequest) {
+                return new XMLHttpRequest();
+            }
+            return new ActiveXObject('Microsoft.XMLHTTP');
+        }
+
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

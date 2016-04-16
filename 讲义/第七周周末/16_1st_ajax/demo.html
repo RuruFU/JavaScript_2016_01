@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        log = function () {
+            console.log('has if')
+            return true;
+        };
+        var getXHR = function () {
+            if (window.XMLHttpRequest && log()) {
+                return new XMLHttpRequest();
+            }
+            return new ActiveXObject('Microsoft.XMLHTTP');
+        };
+        // 惰性载入函数
+        //第一次计算得到的值，供内部函数调用，然后用这个内部函数重置外部函数（因为同名），以后就不用计算了，也不用判断分支条件。这时函数就相当于一个被赋值的变量。
+        var getXHR1 = function () {
+            if (window.XMLHttpRequest && log()) {
+                getXHR1 = function () {
+                    return new XMLHttpRequest();
+                };
+                return new XMLHttpRequest();
+            }
+            getXHR1 = function () {
+                return new ActiveXObject('Microsoft.XMLHTTP');
+            };
+            return new ActiveXObject('Microsoft.XMLHTTP');
+
+        };
+        /**
+         * 利用自执行函数实现惰性函数
+         */
+        var getXHR2 = (function () {
+            if (window.XMLHttpRequest && log()) {
+                return function () {
+                    return new XMLHttpRequest();
+                }
+            }
+            return function () {
+                return new ActiveXObject('Microsoft.XMLHTTP')
+            }
+        })();
+
+        var getXHR3 = (function () {
+            var list = [function () {
+                return new XMLHttpRequest;
+            }, function () {
+                return new ActiveXObject('Microsoft.XMLHTTP');
+            }, function () {
+                return new ActiveXObject("Msxml2.XMLHTTP");
+            }, function () {
+                return new ActiveXObject("Msxml3.XMLHTTP");
+            }];
+            var len = list.length;
+            var xhr = null;
+            while (len--) {
+                try {
+                    list[len]();
+                    xhr = list[len];
+                    break;
+                } catch (ex) {
+                    continue;
+                }
+            }
+            if (xhr !== null) {
+                return xhr;
+            }
+            throw new Error('当前浏览器不支持此方法');
+
+        })();
+        console.log('start');
+        for (var i = 0; i < 100; i++) {
+            console.log(getXHR2());
+        }
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

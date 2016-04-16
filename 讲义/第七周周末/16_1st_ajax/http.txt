@@ -1,0 +1,153 @@
+什么是http？
+传输的媒介
+学好http-> 快速掌握ajax的原理，可以快速排查错误
+
+超文本传输协议 -> hypertext transportion protocol ->HTTP
+
+网络七层协议
+1、物理层 网卡
+2、链路层 网络驱动
+3、网络层 ip
+4、传输层 TCP/UDP 传输协议
+5、会话层 msi 系统层面做 保持会话 断开回话
+6、表现层 加密 解密 非对称加密/对称加密
+7、应用层 http https ftp smtp telnet
+
+我[浏览器] -> 顺丰(送货单+货物)[http的角色] -> 上海果汁厂[服务器]
+request[HTTP的request]
+1、我要果汁 GET
+(只给一个送货单，不需要给货物)
+2、我给你送果汁原料 POST
+(送货单和货物都得给)
+3、果汁到没有到 DELETE/PUT
+(送货单和货物都得给)
+4、我只要收货单 HEAD
+(只要回货单)
+[HTTP的method]
+上海[server] -> 顺丰(货物+回货单)[HTTP的角色] -> 北京[浏览器]
+response[HTTP的response]
+
+送货单(request header) 北京->上海 [HTTP的请求报文]
+1、起始行 [http请求报文的起始行]
+我发送的方式|邮寄地址|回货单的版本号(10年的送货单和16年的送货单有可能不一样)
+2、摘要信息 [HTTP请求报文的首部]
+要什么果汁。以及这个送货单的详细信息()
+3、货物 [HTTP请求报文的主体]
+根据我发送的方式来决定有没有货物
+
+回货单(response header)  上海->北京 [HTTP的响应报文]
+1、起始行 [HTTP响应报文的起始行]
+回货单的版本号(必须和送货单的版本号一模一样)|你这个单子里的果汁，我这里是不是都有|描述信息
+2、摘要信息 [HTTP响应报文的首部]
+你要的什么果汁。以及这个回货单的详细信息()
+3、货物 [HTTP响应报文的主体]
+果汁
+
+
+http 是一个事务(事务由n+1个事件组成，只有所有的事件都完成之后，这个事务才算完成)。
+http包含request和response两个事件，所以只有当request和response都完成之后这个http才算完成
+
+request和response都含有一个报文
+报文的格式：
+1、起始行(http的基本信息)
+请求的起始行
+http方法(服务器就是通过这个知道请求的方法的)、request url(服务器就是通过这个知道请求的路径的)、http的版本号(因为http有0.9,1.0,1,1,2.0等4个版本所以必须标识http的版本号)
+响应的起始行
+http的版本号(必须和请求的版本号一一对应)、状态码(浏览器就是通过这个知道响应码的)、状态码描述符(用来描述状态码)
+2、首部（用来描述http特征以及附属信息）
+格式固定 KEY:VALUE1,VALUE2...
+3、主体(数据的承载)
+请求的主体
+给服务器发送的数据
+响应的主体
+服务器响应给浏览器的数据
+
+二）http 状态码(用来描述http响应的状态)
+1xx 初始信息 101(浏览器发送http请求之后，还没有收到http响应)
+2xx 客户端成功 200 ok、202 accepted
+3xx 重定向 301 永久转移、 302 临时转移、304 Not modified 走缓存
+4xx 客户端错误 400 bad request 参数错误、 401 未认证、 403 禁止访问，没有权限、 404 未找到
+5xx 服务器错误  500 服务器内部错误
+
+三）http 方法(http请求的方式)
+GET 从服务器获取数据 、
+特点：1、没有请求主体，把参数都放到了url里面。
+      2、十分容易被浏览器缓存
+      3、有大小限制(因为它把参数都拼接到HTTP的URL里了，而浏览器对HTTP请求起始行中的第二部分URL的长度有限制，所以造成了get方法有大小限制)chrome 8k、firefox 7k、ie 2k
+      4、明文发送，不宜发送私密数据
+POST 往服务器发送数据
+特点：
+      1、有请求主体，把给服务器传输的数据都放到请求主体里
+      2、post永远不会被缓存
+      3、没有大小限制。(它把数据全放到请求主体里了，而请求主体是没有大小限制的，所以post没有大小限制)
+      4、非明文发送，可以发送私密数据
+DELETE 告诉服务器删除某个数据
+特点：
+    1、特点和get一模一样
+    2、成功的响应码为202
+HEAD 告诉服务器只返回响应起始行和响应首部即可，不需要返回响应主体。
+    1、除了不会被缓存，其他的和get一模一样
+    2、没有响应主体
+    3、应用场景(同步服务器时间、秒杀、下载之前，获取下载的文件有多大)
+PUT 往服务器推送数据
+    1、和post一模一样
+    2、成功的响应码为202
+OPTIONS 检索服务器都支持哪些http方法。并将结果放到响应首部中。不需要返回响应主体。
+    1、只是用来检索服务器支持哪些http方法
+    2、没有响应主体
+
+为什么要设计这么多的方法？
+答：各司其职，固定的方法做固定的事。
+CRUD(增删改查) 增：post 删：delete 改：put 查：get  服务器只要得到http的方法，就可以知道要执行什么操作。但是有一个前提条件：先用options方法检查下服务器是不是支持这些http方法。
+操作用户的接口 /rest/1.0/user 一个接口就可以搞定增删改查
+增 POST /rest/1.0/user 用户数据
+删 DELETE /rest/1.0/user?id=用户id
+改 PUT /rest/1.0/user?id=用户id 用户数据
+查 GET /rest/1.0/user?id=用户id
+
+以上这种软件架构就叫做restful(表征状态转移)
+
+四）URL的方案(标识url通过此方案去请求server)
+http 默认端口 80 最常见的传输协议
+https 默认443 http + SSL/TSL(非对称加密RSA算法)
+smtp 邮件系统
+ftp 文件传输协议
+file 本地文件，该方法无法执行ajax请求(因为ajax是基于http的。http是基于网络的，而本地硬盘是没有网络的，所以无法执行ajax)
+
+
+什么是ajax?
+全称是 异步javascript和xml
+
+什么是异步？异步和同步的区别？
+同步：当前页面有任何一个和server交互的操作，整个页面必须全部刷新。例如(比较老的asp和jsp的网站)
+异步：当与server进行交互的时候，不需要整站刷新，只按需加载响应的内容即可。
+
+
+什么是mimeType？
+答：告诉浏览器以什么格式去解析这段数据
+文案 text/plain
+css text/css
+js text/javascript
+html text/html
+png image/png
+gif image/gif
+jpg/jpeg  image/jpeg
+
+json application/json
+二进制流 application/octet-stream
+
+格式固定 大类型/小类型; charset=xxx (只有大类型为text的时候，charset才生效。charset用来表示这段内容是什么编码格式(GB2312、big5、utf-8、gbk))
+只要通过http获取的资源 100%会有mimeType
+
+通过navigator.mimeTypes获取当前浏览器支持哪些mimeType
+
+ajax的同步和异步？(这里需要注意页面的同步和异步，不要与ajax的同步和异步弄混了)
+同步：ajax操作的http事务完成之后，send方法后面的逻辑才可以执行
+异步：不需要等待http事务完成，可以直接执行send方法后面的逻辑
+
+url的格式？
+http://username:pass@www.baidu.com:80/index.html?a=1&b=2#hash
+
+<scheme>://<username>:<password>@<hostname>:<port><pathname>?<search>#<hash>
+
+<search> => <param1=xxx&param2=xxx...> 这种格式就叫做uri string

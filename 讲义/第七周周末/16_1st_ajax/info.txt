@@ -1,0 +1,11 @@
+张亚涛
+邯郸
+
+
+第一天：
+上午 http
+下午 ajax
+第二天
+上午：how to use jquery ajax
+下午：跨域 接口级别的跨域
+

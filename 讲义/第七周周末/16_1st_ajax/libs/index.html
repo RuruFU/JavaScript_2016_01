@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="baqi.js"></script>
+    <script>
+        x.noConflict('abc');
+
+        abc.ajax({
+            url: 'data.json',
+            type: 'get',
+            cache: false,
+            header: {'zidingyi': 'touxinxi'},
+            async: true,
+            dataType: 'json',
+            success: function (data) {
+                console.log('召唤出勇士:', data.list);
+            }, error: function (err) {
+                console.error(err);
+            },
+            data: {a: 1, b: 2}
+        });
+
+        var x = 1;
+        console.log(x);
+    </script>
+</head>
+<body>
+
+</body>
+</html>

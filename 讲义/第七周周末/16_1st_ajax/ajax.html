@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        var getXHR = (function () {
+            var list = [function () {
+                return new XMLHttpRequest;
+            }, function () {
+                return new ActiveXObject('Microsoft.XMLHTTP');
+            }, function () {
+                return new ActiveXObject("Msxml2.XMLHTTP");
+            }, function () {
+                return new ActiveXObject("Msxml3.XMLHTTP");
+            }];
+            var len = list.length;
+            var xhr = null;
+            while (len--) {
+                try {
+                    list[len]();
+                    xhr = list[len];
+                    break;
+                } catch (ex) {
+                    continue;
+                }
+            }
+            if (xhr !== null) {
+                return xhr;
+            }
+            throw new Error('当前浏览器不支持此方法');
+
+        })();
+
+        // 1、获得ajax对象
+        var xhr = getXHR();
+        xhr.open('GET', 'http.txt', false, 'zhangyatao', '123');
+        xhr.setRequestHeader('myname', 'zyt');
+        xhr.setRequestHeader('content-type', 'text/plain; charset=utf-8');
+        xhr.overrideMimeType('text/plain; charset=utf-8');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                var GMT = xhr.getResponseHeader('Date');
+//                console.log('为转成本地时间之前的值：', GMT);
+                var date = new Date(GMT);
+//                console.log('服务器时间为:', date.toLocaleString());
+
+                if (/^2\d{2}$/.test(xhr.status)) {
+                    console.log('响应主体',xhr.responseText);
+                } else {
+//                    console.log('something wrong');
+                }
+            }
+        };
+        xhr.send();
+        console.log('after send');
+    </script>
+</head>
+<body>
+
+</body>
+</html>

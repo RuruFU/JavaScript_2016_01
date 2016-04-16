@@ -70,9 +70,7 @@ http.createServer(function(request,response){
 		
 		
 	}
-//<<<<<<< HEAD
-//
-//=======
+	
 	//前端程序员和后台程序员要配合：
 	//后台不需要知道数据如何显示在网页上
 	//前端不需要知道在后台数据是如何处理的
@@ -87,17 +85,6 @@ http.createServer(function(request,response){
 	
 	
 	
-//>>>>>>> aeb34095bb30f8063357dbfb20a0cf79be448b68
-}).listen(8080,function(){
+}).listen(8081,function(){
 	console.log("service start");
 	});
-
-
-
-
-
-
-
-
-
-
