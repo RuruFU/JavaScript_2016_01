@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <style type="text/css">
+        *{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            height: 100%;
+            overflow: hidden;
+        }
+        #main{
+            width: 640px;
+            height: 960px;
+            margin-left: -320px;
+            position: absolute;
+            left: 50%;
+            top:0;
+            transform-origin: top;
+            -webkit-transform-origin: top;
+        }
+        #list{
+            height: 400%;
+            width: 100%;
+        }
+        #list li{
+            height: 25%;
+            width: 100%;
+            background-size: cover;
+        }
+        #list li:nth-child(1){
+            background: url("h5场景一/images/b.png") no-repeat;
+
+        }
+        #list li:nth-child(2){
+            background: url("h5场景一/images/c.png") no-repeat;
+        }
+        #list li:nth-child(3){
+            background: url("h5场景一/images/d.png") no-repeat;
+        }
+        #list li:nth-child(4){
+            background: url("h5场景一/images/e.png") no-repeat;
+        }
+        #item{
+            position: absolute;
+            right: 10%;
+            bottom: 45%;
+        }
+        #item span{
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            margin-bottom: 10px;
+            border-radius: 50%;
+            background: darkgray;
+            color: white;
+            display: block;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+<div id="main">
+    <ul id="list">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <div id="item">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    var main=document.querySelector("#main");
+    var oLis=document.querySelectorAll("#list>li");
+    var oSpans=document.querySelectorAll("#item span");
+    var list=document.querySelector("#list");
+    var winW=document.documentElement.clientWidth;//设备
+    var winH=document.documentElement.clientHeight;
+    var desW=640;
+    var desH=960;
+    if(winW/winH<desW/desH){
+        main.style.webkitTransform="scale("+winH/desH+")";
+    }else {
+        main.style.webkitTransform="scale("+winW/desW+")";
+    }
+    [].forEach.call(oLis,function () {
+        var oLi=arguments[0];
+        oLi.index=arguments[1];
+        oLi.addEventListener("touchstart",start,false);
+        oLi.addEventListener("touchmove",move,false);
+        oLi.addEventListener("touchend",end,false);
+    });
+    function start(e) {
+        this.startY=e.changedTouches[0].pageY;
+    }
+    function move(e) {
+        this.flag=true;
+        this.pos=e.changedTouches[0].pageY-this.startY;
+        var movePos=this.offsetHeight*this.index;
+        var mpos=this.pos-movePos;
+        list.style.transform="translate(0,"+mpos+"px)";
+    }
+    function end(e) {
+        if(!this.flag)return
+        var index=this.index,len=oLis.length;
+        if(this.pos<0){
+            this.prevSIndex=(index===len-1?index:index+1);
+        }else if(this.pos>0){
+            this.prevSIndex=(index===0?0:index-1);
+        }
+        //this.prevSIndex=index;
+        //移动的距离
+        var pos=-this.offsetHeight*this.prevSIndex;
+        list.style.webkitTransform="translate(0,"+pos+"px)";
+        list.style.webkitTransition="all 0.7s";
+        list.addEventListener("webkitTransitionEnd",function () {
+            this.style.webkitTransition="";//防止动画积累
+            [].forEach.call(oSpans,function () {
+                arguments[0].className="";
+            })
+        },false);
+        this.flag=false;
+    }
+</script>
