@@ -1,0 +1,295 @@
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-user-select: none;
+}
+
+body,html {
+    width: 100%;
+    height:100%;
+    overflow: hidden;
+}
+
+ul {
+    list-style: none;
+}
+/*@media screen and (min-device-width: 320px){
+    html{
+        font-size: 50px;
+    }
+}
+@media screen and (min-device-width: 360px){
+    html{
+        font-size: 56.25px;
+    }
+}
+
+@media screen and (min-device-width: 400px){
+    html{
+        font-size: 62.5px;
+    }
+}
+@media screen and (min-device-width: 480px){
+    html{
+        font-size:75px;
+    }
+}
+@media screen and (min-device-width: 640px){
+    html{
+        font-size: 100px;
+    }
+}*/
+.main{
+    position: absolute;
+    left: 0;
+    top: 0.9rem;
+    right: 0;
+    bottom: 1.37rem;
+    overflow: auto;
+}
+header{
+    width: 100%;
+    height: 0.9rem;
+    line-height: 0.9rem;
+    font-size: 0.36rem;
+    color: #fff;
+    background: #2a282c;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+/*返回*/
+header span{
+    position: absolute;
+    left: 0.5rem;
+}
+/*箭头*/
+header span:before{
+    position: absolute;
+    left: -0.2rem;
+    top: 0.33rem;
+    content: "";
+    width: 0.2rem;
+    height: 0.2rem;
+    border-top: 2px solid #fff ;
+    border-left: 2px solid #fff;
+    -webkit-transform: rotate(-45deg);
+}
+/*三个圆点*/
+header ul{
+    position: absolute;
+    right: 0.2rem;
+    top: 0.39rem;
+    width: 0.7rem;
+    height: 0.26rem;
+}
+header ul li{
+    width: 0.12rem;
+    height: 0.12rem;
+    float: left;
+    border-radius: 50%;
+    margin: 0 0 0 0.05rem;
+    background: #fff;
+}
+.content{
+    width: 100%;
+    height: 4.36rem;
+    background: url("images/index_02.jpg")no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+.score{
+    display: flex;
+    -webkit-display: flex;
+    flex-flow: row nowrap;/*排列方式：从左到右排列   子容器溢出父容器时  不换行*/
+    -webkit-flex-flow: row nowrap;
+    justify-content: center;/*在y轴方向*/
+    -webkit-justify-content: center;
+    align-items: center;/*在x轴方向*/
+    -webkit-align-content: center;
+    padding: 0.8rem 0 0 0;
+    height: 0.86rem;
+}
+.score p:nth-child(1),.score p:nth-child(3){
+    width: 0.86rem;
+    height: 0.86rem;
+}
+.score p img{
+    width: 100%;
+}
+.score p:nth-child(2){
+    font-size: 0.6rem;
+    color: #fff;
+    margin: 0 0.2rem;
+}
+.date{
+    width: 100%;
+    height: 1rem;
+    text-align: center;
+    line-height: 1rem;
+    color: #fff;
+    font-size: .3rem;
+}
+.video{
+    display: flex;
+    -webkit-display: flex;
+    flex-flow: row nowrap;/*排列方式：从左到右排列   子容器溢出父容器时  不换行*/
+    -webkit-flex-flow: row nowrap;
+    justify-content: center;/*在y轴方向*/
+    -webkit-justify-content: center;
+    align-items: center;/*在x轴方向*/
+    -webkit-align-content: center;
+    padding: 0 0.1rem;
+    height: 0.44rem;
+}
+.video span{
+    display: block;
+    position: relative;
+    width: 1.4rem;
+    height: 0.44rem;
+    padding: 0 0.1rem;
+    line-height: 0.44rem;
+    background: #fff;
+    color: #5bb0e0;
+    font-size: 0.25rem;
+}
+.video span:after{
+    content: "";
+    width: 0;
+    height: 0;
+    border: 0.15rem solid #5bb0e0;
+    border-color: transparent transparent  transparent #5bb0e0;
+    position: absolute;
+    top: 0.08rem;
+    right: 0.08rem;
+}
+.number{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    font-size: 0.3rem;
+    width: 100%;
+    height: 0.75rem;
+    line-height: 0.75rem;
+}
+.number p span{
+    display: block;
+    width: 0.3rem;
+    height: 0.4rem;
+    position: absolute;
+    top: 0.2rem;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+.number p:nth-of-type(1) span{
+    background-image: url("images/zan_left.png");
+    left: 0.35rem;
+}
+.number p:nth-of-type(2) span{
+    background-image: url("images/zan_right.png");
+    right: 0.37rem;
+}
+.number p{
+    float: left;
+    width: 50%;
+    text-align: center;
+    height: 100%;
+    color: #fff;
+    position: relative;
+}
+.scoreNumber h3{
+    font-size: 0.28rem;
+    color: #818283;
+    padding: 0.15rem;
+    font-weight: bold;
+}
+.scoreNumber ul{
+    display: flex;
+    -webkit-display:flex;
+    flex-flow:row nowrap ;
+    -webkit-flex-flow:row nowrap ;
+    justify-content: space-around;
+    line-height: 0.7rem;
+    border-bottom: 1px solid #ccc;
+    font-size: 0.28rem;
+}
+.scoreNumber dl{
+    border-bottom:1px solid #ccc;
+    padding: 0.2rem 0;
+    height: 1.19rem;
+}
+.scoreNumber dt{
+    float: left;
+    margin-right: 0.15rem;
+    width: 1.5rem;
+    height: 1.19rem;
+}
+.scoreNumber dt img{
+    width: 100%;
+}
+.scoreNumber dl dd{
+    font-size: 0.3rem;
+    color: #696969;
+    line-height: 0.34rem;
+}
+.scoreNumber dl dd b{
+    float: right;
+    font-size: 0.23rem;
+    color: #a9a9a9;
+    padding-right: 0.3rem;
+}
+.scoreNumber dl dd:nth-of-type(1){
+    font-weight: bold;
+    color: #000;
+}
+footer{
+    background: #ffffff;
+    height: 1.37rem;
+    line-height: 1.37rem;
+    width: 100%;
+    text-align: center;
+    position:absolute;
+    left: 0;
+    bottom: 0;
+}
+footer .right{
+    position: absolute;
+    left: 0.2rem;
+    padding: 0.2rem 0;
+    height: 1.37rem;
+    width: 4.1rem;
+}
+footer .right span:nth-child(1){
+    float: left;
+    width: 0.9rem;
+    height: 0.88rem;
+    /*margin-left: 0.2rem;*/
+    background-image:url("images/index_09.png") ;
+    background-size: 100%;
+}
+footer .right p{
+    font-size: 0.35rem;
+    color: #696969;
+    line-height: 0.34rem;
+}
+footer .right p:nth-of-type(1){
+    font-weight: bold;
+    color: #000;
+    padding-bottom: 0.08rem;
+}
+footer .left{
+    position: absolute;
+    right: 0.2rem;
+    top: 0.3rem;
+    width: 1.19rem;
+    height: 0.61rem;
+    border-radius: 5%;
+    line-height: 0.61rem;
+    text-align: center;
+    background: #289ce9;
+    font-size: 0.4rem;
+    color: #fff;
+}
+
